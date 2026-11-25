@@ -72,7 +72,7 @@ export interface FaqItem {
   answer: string;
 }
 
-export const LOGO_URL = '/assets/aistudio/The_Promos_Megaphone_Logo_9b1c67d6.png';
+export const LOGO_URL = `${import.meta.env.BASE_URL}assets/aistudio/The_Promos_Megaphone_Logo_9b1c67d6.png`;
 
 export const FOUNDERS: Founder[] = [
   {
@@ -84,7 +84,7 @@ export const FOUNDERS: Founder[] = [
     bio: 'Dietitian, nutritionist and psychologist. Director of Shri Giri Pain Management and Health Care Centre.',
     creatorHighlight:
       'Co-creator behind Doctor Dietitian Duo (93K+ followers) and Health Beyond Medicine, blending audience psychology with high-trust wellness storytelling.',
-    image: '/assets/dr_sapana_cutout.png',
+    image: `${import.meta.env.BASE_URL}assets/dr_sapana_cutout.png`,
     heroImageStyle: 'cutout',
     heroViews: '50M+',
     heroCreatorTitle: 'Creator',
@@ -112,7 +112,7 @@ export const FOUNDERS: Founder[] = [
     bio: 'Pain physician, anesthesiologist and biology educator. Functional Head at Soching Education and founder of Shri Giri Pain Management Center, Kota.',
     creatorHighlight:
       'Co-creator behind Doctor Dietitian Duo (93K+ followers) and Health Beyond Medicine, turning deep medical expertise into viral, credible health content.',
-    image: '/assets/aistudio/Dr_ansh-2_d2975b31.png',
+    image: `${import.meta.env.BASE_URL}assets/aistudio/Dr_ansh-2_d2975b31.png`,
     heroImageStyle: 'cutout',
     heroViews: '50M+',
     heroCreatorTitle: 'Educator & MD',
@@ -140,7 +140,7 @@ export const CORE_TEAM: CoreTeamMember[] = [
     subtitle: 'The Creative Mind · 6+ Years Experience',
     name: 'Deepak Singh Chauhan',
     initials: 'DS',
-    image: '/assets/aistudio/image_145dfea7.png',
+    image: `${import.meta.env.BASE_URL}assets/aistudio/image_145dfea7.png`,
     bio: 'The creative mind with 6+ years in content and social media, scaling digital brands through strategic storytelling. From refining scripts to approving final edits, nothing goes live without his eye on strategy and quality.',
   },
   {
@@ -149,7 +149,7 @@ export const CORE_TEAM: CoreTeamMember[] = [
     subtitle: 'Biology Faculty · Ex-Motion Education',
     name: 'Aakansha Agarwal',
     initials: 'AA',
-    image: '/assets/aistudio/image_30e4c3dc.png',
+    image: `${import.meta.env.BASE_URL}assets/aistudio/image_30e4c3dc.png`,
     bio: 'The presenter. A Biology faculty, model, and lead content creator with 4+ years of experience, including as an ex-faculty at Motion Education. A former Miss Iconic Rajasthan finalist, she brings together subject expertise, confidence on camera, and strong content presence.',
   },
   {
@@ -167,14 +167,14 @@ export const CLIENT_RESULTS: ClientResult[] = [
     id: 'doctordietitianduo',
     handle: 'doctordietitianduo',
     displayName: 'Doctor Dietitian Duo',
-    profileImage: '/assets/aistudio/Screenshot_2026-11-24_155405_aa5cc506.png',
+    profileImage: `${import.meta.env.BASE_URL}assets/aistudio/Screenshot_2026-11-24_155405_aa5cc506.png`,
     milestoneValue: '~93K Followers',
   },
   {
     id: 'sochingeducation',
     handle: 'sochingeducation',
     displayName: 'Soching Education',
-    profileImage: '/assets/aistudio/Screenshot_2026-11-24_155553_6654e539.png',
+    profileImage: `${import.meta.env.BASE_URL}assets/aistudio/Screenshot_2026-11-24_155553_6654e539.png`,
     milestoneValue: '50.2K Followers',
     milestoneSubtext: 'in just 1 year',
   },
@@ -182,7 +182,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
     id: 'hbmbydoctordietitianduo',
     handle: 'hbmbydoctordietitianduo',
     displayName: 'Health Beyond Medicine By Doctor Dietitian Duo',
-    profileImage: '/assets/aistudio/Screenshot_2026-11-24_155703_081cd9f4.png',
+    profileImage: `${import.meta.env.BASE_URL}assets/aistudio/Screenshot_2026-11-24_155703_081cd9f4.png`,
     milestoneValue: '~3.3K Followers',
     milestoneSubtext: 'in 2 months',
   },
@@ -199,7 +199,7 @@ export const REELS: ReelItem[] = [
     title: 'Draw Female Reproductive System Diagram in 10 Seconds',
     creatorHandle: '@sochingeducation',
     niche: 'NEET Biology',
-    thumbnail: '/assets/reels/DTr1ZLwEbyL.jpg',
+    thumbnail: `${import.meta.env.BASE_URL}assets/reels/DTr1ZLwEbyL.jpg`,
   },
   {
     id: 'DY3_ZIrSiS8',
@@ -211,7 +211,7 @@ export const REELS: ReelItem[] = [
     title: 'Write Any Chemical Formula in Seconds!',
     creatorHandle: '@sochingeducation',
     niche: 'Chemistry & IUPAC',
-    thumbnail: '/assets/reels/DY3_ZIrSiS8.jpg',
+    thumbnail: `${import.meta.env.BASE_URL}assets/reels/DY3_ZIrSiS8.jpg`,
   },
   {
     id: 'DXowftZEsgD',
@@ -223,7 +223,7 @@ export const REELS: ReelItem[] = [
     title: 'Difference Between Antigen, Antibodies, Antibiotics & Antidote',
     creatorHandle: '@sochingeducation',
     niche: 'NEET Biology',
-    thumbnail: '/assets/reels/DXowftZEsgD.jpg',
+    thumbnail: `${import.meta.env.BASE_URL}assets/reels/DXowftZEsgD.jpg`,
   },
   {
     id: 'DXHfxJvE6k2',
@@ -235,7 +235,7 @@ export const REELS: ReelItem[] = [
     title: 'नेता और बीवी — Doctor Couple Comedy',
     creatorHandle: '@doctordietitianduo',
     niche: 'Creator Lifestyle',
-    thumbnail: '/assets/reels/DXHfxJvE6k2.jpg',
+    thumbnail: `${import.meta.env.BASE_URL}assets/reels/DXHfxJvE6k2.jpg`,
   },
   {
     id: 'DY2AZAphjiS',
@@ -247,7 +247,7 @@ export const REELS: ReelItem[] = [
     title: 'Complete Antibodies in 30 Seconds | NEET Biology',
     creatorHandle: '@sochingeducation',
     niche: 'NEET Biology',
-    thumbnail: '/assets/reels/DY2AZAphjiS.jpg',
+    thumbnail: `${import.meta.env.BASE_URL}assets/reels/DY2AZAphjiS.jpg`,
   },
   {
     id: 'C6q3FLGPQv0',
@@ -259,7 +259,7 @@ export const REELS: ReelItem[] = [
     title: 'Doctor Dietitian Duo Viral Reel',
     creatorHandle: '@doctordietitianduo',
     niche: 'Creator Lifestyle',
-    thumbnail: '/assets/reels/C6q3FLGPQv0.jpg',
+    thumbnail: `${import.meta.env.BASE_URL}assets/reels/C6q3FLGPQv0.jpg`,
   },
   {
     id: 'CxW7XHZPaPE',
@@ -271,7 +271,7 @@ export const REELS: ReelItem[] = [
     title: 'Esa Kya Maang Liya Maine',
     creatorHandle: '@doctordietitianduo',
     niche: 'Couple Comedy',
-    thumbnail: '/assets/reels/CxW7XHZPaPE.jpg',
+    thumbnail: `${import.meta.env.BASE_URL}assets/reels/CxW7XHZPaPE.jpg`,
   },
   {
     id: 'DdoedvDNjpi',
@@ -283,7 +283,7 @@ export const REELS: ReelItem[] = [
     title: 'कोलेस्ट्रॉल के 5 लक्षण — 5 Signs of High Cholesterol',
     creatorHandle: '@hbmbydoctordietitianduo',
     niche: 'Medical Authority',
-    thumbnail: '/assets/reels/DdoedvDNjpi.jpg',
+    thumbnail: `${import.meta.env.BASE_URL}assets/reels/DdoedvDNjpi.jpg`,
   },
   {
     id: 'Dd_pn4XB4yq',
@@ -295,7 +295,7 @@ export const REELS: ReelItem[] = [
     title: 'बच्चे के गले में कुछ अटक जाए तो तुरंत क्या करें?',
     creatorHandle: '@hbmbydoctordietitianduo',
     niche: 'Medical Authority',
-    thumbnail: '/assets/reels/Dd_pn4XB4yq.jpg',
+    thumbnail: `${import.meta.env.BASE_URL}assets/reels/Dd_pn4XB4yq.jpg`,
   },
   {
     id: 'DehJvKXqfMF',
@@ -307,7 +307,7 @@ export const REELS: ReelItem[] = [
     title: '5 Foods for High Cholesterol',
     creatorHandle: '@hbmbydoctordietitianduo',
     niche: 'Health & Nutrition',
-    thumbnail: '/assets/reels/DehJvKXqfMF.jpg',
+    thumbnail: `${import.meta.env.BASE_URL}assets/reels/DehJvKXqfMF.jpg`,
   },
 ];
 
@@ -317,7 +317,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'Deep-Dive Research',
     description:
       'We analyze competitors, find gaps in your niche and study the patterns behind high-performing reels to shape your content strategy.',
-    image: '/assets/aistudio/01_Deep_Dive_Research_796934e7.PNG',
+    image: `${import.meta.env.BASE_URL}assets/aistudio/01_Deep_Dive_Research_796934e7.PNG`,
     imageAlt: 'The Promos strategy team conducting competitor and niche research at desktop workstation',
   },
   {
@@ -325,7 +325,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'Viral Scripting',
     description:
       'We write 25–30 hook-led scripts designed to catch attention in the first few seconds and keep viewers watching.',
-    image: '/assets/aistudio/02_Viral_Scripting_7df74f2b.png',
+    image: `${import.meta.env.BASE_URL}assets/aistudio/02_Viral_Scripting_7df74f2b.png`,
     imageAlt: 'Creative strategist writing hook-led short-form video scripts on tablet',
   },
   {
@@ -333,7 +333,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'Guided Shooting',
     description:
       'Record in just two days a month. We prepare the shot list, direct each take and guide you through delivery.',
-    image: '/src/assets/images/protocol_guided_shooting_1795587735354.jpg',
+    image: `${import.meta.env.BASE_URL}src/assets/images/protocol_guided_shooting_1795587735354.jpg`,
     imageAlt: 'Director and camera crew guiding a founder during a studio video shoot',
   },
   {
@@ -341,7 +341,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'High-Retention Editing',
     description:
       'Our editors use high-retention pacing, crisp captions and contextual b-roll to hold attention and keep your message clear.',
-    image: '/assets/aistudio/04_High-Retention_Editing_cc51f2f5.png',
+    image: `${import.meta.env.BASE_URL}assets/aistudio/04_High-Retention_Editing_cc51f2f5.png`,
     imageAlt: 'Video editor color-grading and cutting a high-retention vertical reel in Premiere Pro',
   },
   {
@@ -349,7 +349,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'Strategic Posting',
     description:
       'We handle uploads, captions, hashtags, search optimisation and publishing times for each platform.',
-    image: '/assets/aistudio/05_Strategic_Posting_1e5815bb.png',
+    image: `${import.meta.env.BASE_URL}assets/aistudio/05_Strategic_Posting_1e5815bb.png`,
     imageAlt: 'Optimized vertical health reel prepared for publishing on smartphone screen',
   },
   {
@@ -357,7 +357,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'Growth Management',
     description:
       'We manage your community, reply to comments and use DM automation to follow up with interested leads.',
-    image: '/src/assets/images/protocol_growth_management_1795587733210.jpg',
+    image: `${import.meta.env.BASE_URL}src/assets/images/protocol_growth_management_1795587733210.jpg`,
     imageAlt: 'Agency growth team reviewing engagement analytics and community growth strategy',
   },
 ];
