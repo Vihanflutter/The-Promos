@@ -72,7 +72,7 @@ export interface FaqItem {
   answer: string;
 }
 
-export const LOGO_URL = `${import.meta.env.BASE_URL}assets/aistudio/The_Promos_Megaphone_Logo_9b1c67d6.png`;
+export const LOGO_URL = `${import.meta.env.BASE_URL}assets/optimized/logo.webp`;
 
 export const FOUNDERS: Founder[] = [
   {
@@ -84,7 +84,7 @@ export const FOUNDERS: Founder[] = [
     bio: 'Dietitian, nutritionist and psychologist. Director of Shri Giri Pain Management and Health Care Centre.',
     creatorHighlight:
       'Co-creator behind Doctor Dietitian Duo (93K+ followers) and Health Beyond Medicine, blending audience psychology with high-trust wellness storytelling.',
-    image: `${import.meta.env.BASE_URL}assets/dr_sapana_cutout.png`,
+    image: `${import.meta.env.BASE_URL}assets/optimized/dr_sapana.webp`,
     heroImageStyle: 'cutout',
     heroViews: '50M+',
     heroCreatorTitle: 'Creator',
@@ -112,7 +112,7 @@ export const FOUNDERS: Founder[] = [
     bio: 'Pain physician, anesthesiologist and biology educator. Functional Head at Soching Education and founder of Shri Giri Pain Management Center, Kota.',
     creatorHighlight:
       'Co-creator behind Doctor Dietitian Duo (93K+ followers) and Health Beyond Medicine, turning deep medical expertise into viral, credible health content.',
-    image: `${import.meta.env.BASE_URL}assets/aistudio/Dr_ansh-2_d2975b31.png`,
+    image: `${import.meta.env.BASE_URL}assets/optimized/dr_anshuman.webp`,
     heroImageStyle: 'cutout',
     heroViews: '50M+',
     heroCreatorTitle: 'Educator & MD',
@@ -140,7 +140,7 @@ export const CORE_TEAM: CoreTeamMember[] = [
     subtitle: 'The Creative Mind · 6+ Years Experience',
     name: 'Deepak Singh Chauhan',
     initials: 'DS',
-    image: `${import.meta.env.BASE_URL}assets/aistudio/image_145dfea7.png`,
+    image: `${import.meta.env.BASE_URL}assets/optimized/team_deepak.webp`,
     bio: 'The creative mind with 6+ years in content and social media, scaling digital brands through strategic storytelling. From refining scripts to approving final edits, nothing goes live without his eye on strategy and quality.',
   },
   {
@@ -149,7 +149,7 @@ export const CORE_TEAM: CoreTeamMember[] = [
     subtitle: 'Biology Faculty · Ex-Motion Education',
     name: 'Aakansha Agarwal',
     initials: 'AA',
-    image: `${import.meta.env.BASE_URL}assets/aistudio/image_30e4c3dc.png`,
+    image: `${import.meta.env.BASE_URL}assets/optimized/team_aakansha.webp`,
     bio: 'The presenter. A Biology faculty, model, and lead content creator with 4+ years of experience, including as an ex-faculty at Motion Education. A former Miss Iconic Rajasthan finalist, she brings together subject expertise, confidence on camera, and strong content presence.',
   },
   {
@@ -167,14 +167,14 @@ export const CLIENT_RESULTS: ClientResult[] = [
     id: 'doctordietitianduo',
     handle: 'doctordietitianduo',
     displayName: 'Doctor Dietitian Duo',
-    profileImage: `${import.meta.env.BASE_URL}assets/aistudio/Screenshot_2026-11-24_155405_aa5cc506.png`,
+    profileImage: `${import.meta.env.BASE_URL}assets/optimized/result_duo.webp`,
     milestoneValue: '~93K Followers',
   },
   {
     id: 'sochingeducation',
     handle: 'sochingeducation',
     displayName: 'Soching Education',
-    profileImage: `${import.meta.env.BASE_URL}assets/aistudio/Screenshot_2026-11-24_155553_6654e539.png`,
+    profileImage: `${import.meta.env.BASE_URL}assets/optimized/result_soching.webp`,
     milestoneValue: '50.2K Followers',
     milestoneSubtext: 'in just 1 year',
   },
@@ -182,7 +182,7 @@ export const CLIENT_RESULTS: ClientResult[] = [
     id: 'hbmbydoctordietitianduo',
     handle: 'hbmbydoctordietitianduo',
     displayName: 'Health Beyond Medicine By Doctor Dietitian Duo',
-    profileImage: `${import.meta.env.BASE_URL}assets/aistudio/Screenshot_2026-11-24_155703_081cd9f4.png`,
+    profileImage: `${import.meta.env.BASE_URL}assets/optimized/result_hbm.webp`,
     milestoneValue: '~3.3K Followers',
     milestoneSubtext: 'in 2 months',
   },
@@ -317,7 +317,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'Deep-Dive Research',
     description:
       'We analyze competitors, find gaps in your niche and study the patterns behind high-performing reels to shape your content strategy.',
-    image: `${import.meta.env.BASE_URL}assets/aistudio/01_Deep_Dive_Research_796934e7.PNG`,
+    image: `${import.meta.env.BASE_URL}assets/optimized/protocol_01.webp`,
     imageAlt: 'The Promos strategy team conducting competitor and niche research at desktop workstation',
   },
   {
@@ -325,7 +325,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'Viral Scripting',
     description:
       'We write 25–30 hook-led scripts designed to catch attention in the first few seconds and keep viewers watching.',
-    image: `${import.meta.env.BASE_URL}assets/aistudio/02_Viral_Scripting_7df74f2b.png`,
+    image: `${import.meta.env.BASE_URL}assets/optimized/protocol_02.webp`,
     imageAlt: 'Creative strategist writing hook-led short-form video scripts on tablet',
   },
   {
@@ -333,7 +333,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'Guided Shooting',
     description:
       'Record in just two days a month. We prepare the shot list, direct each take and guide you through delivery.',
-    image: `${import.meta.env.BASE_URL}src/assets/images/protocol_guided_shooting_1795587735354.jpg`,
+    image: `${import.meta.env.BASE_URL}assets/optimized/protocol_03.webp`,
     imageAlt: 'Director and camera crew guiding a founder during a studio video shoot',
   },
   {
@@ -341,7 +341,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'High-Retention Editing',
     description:
       'Our editors use high-retention pacing, crisp captions and contextual b-roll to hold attention and keep your message clear.',
-    image: `${import.meta.env.BASE_URL}assets/aistudio/04_High-Retention_Editing_cc51f2f5.png`,
+    image: `${import.meta.env.BASE_URL}assets/optimized/protocol_04.webp`,
     imageAlt: 'Video editor color-grading and cutting a high-retention vertical reel in Premiere Pro',
   },
   {
@@ -349,7 +349,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'Strategic Posting',
     description:
       'We handle uploads, captions, hashtags, search optimisation and publishing times for each platform.',
-    image: `${import.meta.env.BASE_URL}assets/aistudio/05_Strategic_Posting_1e5815bb.png`,
+    image: `${import.meta.env.BASE_URL}assets/optimized/protocol_05.webp`,
     imageAlt: 'Optimized vertical health reel prepared for publishing on smartphone screen',
   },
   {
@@ -357,7 +357,7 @@ export const PROTOCOL_STEPS: ProtocolStep[] = [
     title: 'Growth Management',
     description:
       'We manage your community, reply to comments and use DM automation to follow up with interested leads.',
-    image: `${import.meta.env.BASE_URL}src/assets/images/protocol_growth_management_1795587733210.jpg`,
+    image: `${import.meta.env.BASE_URL}assets/optimized/protocol_06.webp`,
     imageAlt: 'Agency growth team reviewing engagement analytics and community growth strategy',
   },
 ];

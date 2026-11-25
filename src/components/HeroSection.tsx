@@ -10,7 +10,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
+  const cursorGlowRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<number | null>(null);
   const touchStartXRef = useRef<number>(0);
 
@@ -52,11 +52,15 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
   return (
     <section
       id="top"
-      onMouseMove={(e) => {
+      onPointerMove={(e) => {
+        if (e.pointerType !== 'mouse' || !cursorGlowRef.current) return;
         const rect = e.currentTarget.getBoundingClientRect();
-        setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        cursorGlowRef.current.style.opacity = '1';
+        cursorGlowRef.current.style.transform = `translate3d(${e.clientX - rect.left}px, ${e.clientY - rect.top}px, 0) translate(-50%, -50%)`;
       }}
-      onMouseLeave={() => setCursorPos(null)}
+      onPointerLeave={() => {
+        if (cursorGlowRef.current) cursorGlowRef.current.style.opacity = '0';
+      }}
       className="relative overflow-hidden bg-gradient-to-b from-[#FCFBF9] via-[#FFFCFC] to-[#FFF4F6] pt-12 pb-20 sm:pt-16 sm:pb-28 art-paper-grain"
     >
       {/* Subtle architectural gallery lines */}
@@ -112,14 +116,12 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
         </defs>
       </svg>
 
-      {/* Subtle mouse-follow blush ambient light */}
-      {cursorPos && (
-        <div
-          aria-hidden="true"
-          style={{ left: cursorPos.x, top: cursorPos.y }}
-          className="hidden md:block pointer-events-none absolute w-[340px] h-[340px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.09),transparent_70%)] blur-[44px] transition-all duration-100 ease-out z-0"
-        />
-      )}
+      {/* Subtle desktop-only mouse-follow blush ambient light (zero React re-renders) */}
+      <div
+        ref={cursorGlowRef}
+        aria-hidden="true"
+        className="hidden md:block pointer-events-none absolute top-0 left-0 w-[380px] h-[380px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.085)_0%,rgba(225,29,53,0.025)_42%,transparent_72%)] opacity-0 transition-opacity duration-200 will-change-transform z-0"
+      />
 
       {/* Subtle floating ambient particles */}
       <span
@@ -146,6 +148,7 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
                   src={LOGO_URL}
                   alt=""
                   aria-hidden="true"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   className="w-6 h-6 object-cover object-[50%_18%] mix-blend-multiply"
                 />
@@ -245,7 +248,7 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
               {/* Soft breathing crimson-blush radial glow behind arch */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute top-[45%] left-1/2 w-[350px] h-[350px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.16),transparent_70%)] blur-[62px] animate-orb-pulse z-0"
+                className="pointer-events-none absolute top-[45%] left-1/2 w-[380px] h-[380px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.14)_0%,rgba(225,29,53,0.04)_44%,transparent_72%)] animate-orb-pulse z-0"
               />
 
               {/* Outer Artistic Hairline Gallery Arch Halo */}
@@ -284,6 +287,9 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
                       <img
                         src={founder.image}
                         alt={`${founder.name}, Founder at The Promos`}
+                        loading="eager"
+                        decoding="async"
+                        fetchPriority={idx === 0 ? 'high' : 'auto'}
                         referrerPolicy="no-referrer"
                         className={`founder-cutout-mask object-contain object-bottom drop-shadow-[0_20px_30px_rgba(13,15,20,0.14)] ${
                           founder.id === 'dr-sapana'
@@ -299,7 +305,7 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
               {/* SLIDE 0 FLOATING CARDS — Dr. Sapana Agarwal */}
               <div
                 style={{ animationDelay: '0.2s' }}
-                className={`animate-float-card absolute top-4 -right-1 sm:-right-6 bg-white/95 backdrop-blur-md rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-[0_18px_40px_-14px_rgba(13,15,20,0.16)] border border-[#0D0F14]/[0.07] items-center gap-2.5 sm:gap-3 z-10 transition-opacity duration-500 ${
+                className={`animate-float-card absolute top-4 -right-1 sm:-right-6 bg-white md:bg-white/95 md:backdrop-blur-md rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-[0_18px_40px_-14px_rgba(13,15,20,0.16)] border border-[#0D0F14]/[0.07] items-center gap-2.5 sm:gap-3 z-10 transition-opacity duration-500 ${
                   activeIndex === 0 ? 'flex opacity-100' : 'hidden opacity-0'
                 }`}
               >
@@ -323,7 +329,7 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
                 rel="noreferrer"
                 aria-label="Follow @thepromosbyd3 on Instagram"
                 style={{ animationDelay: '1.4s' }}
-                className={`animate-float-card absolute left-0 sm:-left-3 top-[55%] w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/95 backdrop-blur-md shadow-[0_14px_30px_-10px_rgba(13,15,20,0.18)] border border-[#E11D35]/18 items-center justify-center text-[#0D0F14] hover:text-[#E11D35] hover:border-[#E11D35]/40 transition-colors z-10 ${
+                className={`animate-float-card absolute left-0 sm:-left-3 top-[55%] w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white md:bg-white/95 md:backdrop-blur-md shadow-[0_14px_30px_-10px_rgba(13,15,20,0.18)] border border-[#E11D35]/18 items-center justify-center text-[#0D0F14] hover:text-[#E11D35] hover:border-[#E11D35]/40 transition-colors z-10 ${
                   activeIndex === 0 ? 'flex' : 'hidden'
                 }`}
               >
@@ -332,7 +338,7 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
 
               <div
                 style={{ animationDelay: '0.8s' }}
-                className={`animate-float-card absolute bottom-4 -left-1 sm:-left-8 bg-white/95 backdrop-blur-md rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-[0_18px_40px_-14px_rgba(13,15,20,0.18)] border border-[#0D0F14]/[0.07] items-center gap-3 z-10 max-w-[225px] sm:max-w-[245px] ${
+                className={`animate-float-card absolute bottom-4 -left-1 sm:-left-8 bg-white md:bg-white/95 md:backdrop-blur-md rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-[0_18px_40px_-14px_rgba(13,15,20,0.18)] border border-[#0D0F14]/[0.07] items-center gap-3 z-10 max-w-[225px] sm:max-w-[245px] ${
                   activeIndex === 0 ? 'flex' : 'hidden'
                 }`}
               >
@@ -352,7 +358,7 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
               {/* SLIDE 1 FLOATING CARDS — Dr. Anshuman Agarwal (strictly clear of face) */}
               <div
                 style={{ animationDelay: '0.3s' }}
-                className={`animate-float-card absolute top-4 -right-1 sm:-right-6 bg-white/95 backdrop-blur-md rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-[0_18px_40px_-14px_rgba(13,15,20,0.16)] border border-[#0D0F14]/[0.07] items-center gap-2.5 sm:gap-3 z-10 ${
+                className={`animate-float-card absolute top-4 -right-1 sm:-right-6 bg-white md:bg-white/95 md:backdrop-blur-md rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-[0_18px_40px_-14px_rgba(13,15,20,0.16)] border border-[#0D0F14]/[0.07] items-center gap-2.5 sm:gap-3 z-10 ${
                   activeIndex === 1 ? 'flex' : 'hidden'
                 }`}
               >
@@ -376,7 +382,7 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
                 rel="noreferrer"
                 aria-label="Follow @thepromosbyd3 on Instagram"
                 style={{ animationDelay: '1.5s' }}
-                className={`animate-float-card absolute right-0 sm:-right-3 top-[56%] w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/95 backdrop-blur-md shadow-[0_14px_30px_-10px_rgba(13,15,20,0.18)] border border-[#E11D35]/18 items-center justify-center text-[#0D0F14] hover:text-[#E11D35] hover:border-[#E11D35]/40 transition-colors z-10 ${
+                className={`animate-float-card absolute right-0 sm:-right-3 top-[56%] w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white md:bg-white/95 md:backdrop-blur-md shadow-[0_14px_30px_-10px_rgba(13,15,20,0.18)] border border-[#E11D35]/18 items-center justify-center text-[#0D0F14] hover:text-[#E11D35] hover:border-[#E11D35]/40 transition-colors z-10 ${
                   activeIndex === 1 ? 'flex' : 'hidden'
                 }`}
               >
@@ -385,7 +391,7 @@ export function HeroSection({ onOpenInquiry }: HeroSectionProps) {
 
               <div
                 style={{ animationDelay: '0.9s' }}
-                className={`animate-float-card absolute bottom-4 -left-1 sm:-left-8 bg-white/95 backdrop-blur-md rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-[0_18px_40px_-14px_rgba(13,15,20,0.18)] border border-[#0D0F14]/[0.07] items-center gap-3 z-10 max-w-[225px] sm:max-w-[245px] ${
+                className={`animate-float-card absolute bottom-4 -left-1 sm:-left-8 bg-white md:bg-white/95 md:backdrop-blur-md rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 shadow-[0_18px_40px_-14px_rgba(13,15,20,0.18)] border border-[#0D0F14]/[0.07] items-center gap-3 z-10 max-w-[225px] sm:max-w-[245px] ${
                   activeIndex === 1 ? 'flex' : 'hidden'
                 }`}
               >

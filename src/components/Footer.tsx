@@ -13,7 +13,7 @@ export function Footer({ onOpenInquiry }: FooterProps) {
       {/* Subtle breathing crimson ambient glow behind final CTA */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-24 right-[8%] w-[420px] h-[280px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.22),transparent_70%)] blur-[72px] animate-orb-pulse"
+        className="pointer-events-none absolute -top-24 right-[8%] w-[460px] h-[320px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.2)_0%,rgba(225,29,53,0.06)_42%,transparent_72%)]"
       />
 
       {/* Final Conversion Band */}
@@ -53,6 +53,8 @@ export function Footer({ onOpenInquiry }: FooterProps) {
                 <img
                   src={LOGO_URL}
                   alt="The Promos logo"
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   className="w-9 h-9 object-cover object-[50%_18%]"
                 />

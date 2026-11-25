@@ -1,4 +1,5 @@
-import { motion } from 'motion/react';
+import { motion, useInView } from 'motion/react';
+import { useRef } from 'react';
 import { CLIENT_RESULTS } from '../data/content';
 import { AnimatedMetric, EASE_EDITORIAL, Reveal, SpotlightSurface } from './MotionPrimitives';
 
@@ -12,22 +13,26 @@ interface ConfettiPiece {
 }
 
 const FALLING_CONFETTI: ConfettiPiece[] = [
-  { left: '6%', color: '#E11D35', width: 9, height: 5, duration: '4.4s', delay: '0s' },
-  { left: '14%', color: '#10B981', width: 8, height: 5, duration: '5.1s', delay: '-1.3s' },
-  { left: '23%', color: '#F59E0B', width: 10, height: 5, duration: '4.7s', delay: '-2.8s' },
-  { left: '32%', color: '#8B5CF6', width: 8, height: 6, duration: '5.4s', delay: '-0.7s' },
-  { left: '41%', color: '#E11D35', width: 9, height: 5, duration: '4.2s', delay: '-3.1s' },
-  { left: '52%', color: '#3B82F6', width: 8, height: 5, duration: '5.0s', delay: '-1.9s' },
-  { left: '61%', color: '#10B981', width: 10, height: 5, duration: '4.6s', delay: '-0.4s' },
-  { left: '70%', color: '#F59E0B', width: 8, height: 6, duration: '5.2s', delay: '-2.5s' },
-  { left: '79%', color: '#EC4899', width: 9, height: 5, duration: '4.5s', delay: '-1.1s' },
-  { left: '88%', color: '#8B5CF6', width: 8, height: 5, duration: '5.3s', delay: '-3.6s' },
+  { left: '8%', color: '#E11D35', width: 9, height: 5, duration: '4.4s', delay: '0s' },
+  { left: '22%', color: '#10B981', width: 8, height: 5, duration: '5.1s', delay: '-1.3s' },
+  { left: '37%', color: '#F59E0B', width: 10, height: 5, duration: '4.7s', delay: '-2.8s' },
+  { left: '54%', color: '#8B5CF6', width: 8, height: 6, duration: '5.4s', delay: '-0.7s' },
+  { left: '72%', color: '#E11D35', width: 9, height: 5, duration: '4.2s', delay: '-3.1s' },
+  { left: '88%', color: '#3B82F6', width: 8, height: 5, duration: '5.0s', delay: '-1.9s' },
+  { left: '15%', color: '#10B981', width: 9, height: 5, duration: '4.6s', delay: '-0.4s' },
+  { left: '46%', color: '#F59E0B', width: 8, height: 6, duration: '5.2s', delay: '-2.5s' },
+  { left: '63%', color: '#EC4899', width: 9, height: 5, duration: '4.5s', delay: '-1.1s' },
+  { left: '81%', color: '#8B5CF6', width: 8, height: 5, duration: '5.3s', delay: '-3.6s' },
   { left: '94%', color: '#E11D35', width: 9, height: 5, duration: '4.8s', delay: '-2.1s' },
 ];
 
 export function ResultsSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isSectionVisible = useInView(sectionRef, { margin: '150px 0px' });
+
   return (
     <section
+      ref={sectionRef}
       id="results"
       className="relative py-22 sm:py-28 bg-gradient-to-b from-[#FFF4F6] via-[#FCFBF9] to-white border-t border-[#0D0F14]/[0.05] art-paper-grain"
     >
@@ -53,19 +58,18 @@ export function ResultsSection() {
           {CLIENT_RESULTS.map((client, cardIdx) => (
             <motion.article
               key={client.id}
-              initial={{ opacity: 0, y: 36, scale: 0.985 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.7, delay: cardIdx * 0.08, ease: EASE_EDITORIAL }}
-              whileHover={{ y: -4 }}
-              className="group relative rounded-[28px] bg-white border border-[#0D0F14]/[0.08] shadow-[0_24px_60px_-34px_rgba(13,15,20,0.2)] hover:border-[#E11D35]/35 hover:shadow-[0_30px_70px_-30px_rgba(225,29,53,0.2)] transition-colors duration-300 overflow-hidden"
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.16 }}
+              transition={{ duration: 0.6, delay: cardIdx * 0.06, ease: EASE_EDITORIAL }}
+              className="group relative rounded-[28px] bg-white border border-[#0D0F14]/[0.08] shadow-[0_20px_50px_-30px_rgba(13,15,20,0.18)] hover:border-[#E11D35]/35 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
             >
               <SpotlightSurface
                 glowColor="rgba(225, 29, 53, 0.09)"
                 glowSize={380}
                 className="grid grid-cols-1 md:grid-cols-12"
               >
-                {/* Continuous Party-Popper Falling Confetti Overlay across the card */}
+                {/* Continuous Party-Popper Falling Confetti (pauses off-screen for 60fps mobile scroll) */}
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-0 overflow-hidden z-20"
@@ -81,20 +85,24 @@ export function ResultsSection() {
                         backgroundColor: piece.color,
                         animationDuration: piece.duration,
                         animationDelay: `calc(${piece.delay} - ${cardIdx * 0.6}s)`,
+                        animationPlayState: isSectionVisible ? 'running' : 'paused',
                       }}
-                      className="absolute rounded-[2px] animate-confetti-fall"
+                      className={`absolute rounded-[2px] animate-confetti-fall ${
+                        idx >= 6 ? 'hidden sm:block' : ''
+                      }`}
                     />
                   ))}
                 </div>
 
-                {/* Left Side: Actual Uploaded Instagram Profile Screenshot */}
-                <div className="md:col-span-6 p-6 sm:p-8 bg-white/95 flex items-center justify-center relative z-10">
+                {/* Left Side: Optimized Instagram Profile Screenshot */}
+                <div className="md:col-span-6 p-6 sm:p-8 bg-white flex items-center justify-center relative z-10">
                   <img
                     src={client.profileImage}
                     alt={`${client.displayName} (@${client.handle}) Instagram profile results`}
                     referrerPolicy="no-referrer"
                     loading="lazy"
-                    className="w-full max-w-[395px] h-auto object-contain rounded-xl transition-transform duration-500 ease-out group-hover:scale-[1.025]"
+                    decoding="async"
+                    className="w-full max-w-[395px] h-auto object-contain rounded-xl transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                   />
                 </div>
 
@@ -105,6 +113,7 @@ export function ResultsSection() {
                     aria-hidden="true"
                     viewBox="0 0 240 240"
                     fill="none"
+                    style={{ animationPlayState: isSectionVisible ? 'running' : 'paused' }}
                     className="pointer-events-none absolute -right-16 -bottom-16 w-56 h-56 opacity-50 animate-slow-spin"
                   >
                     <circle cx="120" cy="120" r="88" stroke="#E11D35" strokeOpacity="0.18" strokeWidth="1" />

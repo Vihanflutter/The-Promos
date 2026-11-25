@@ -36,7 +36,7 @@ export function GrowthPeakSection() {
   const [isBoom, setIsBoom] = useState(false);
   const [boomCycle, setBoomCycle] = useState(0);
   const [isDesktop, setIsDesktop] = useState(true);
-  const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
+  const cursorGlowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 768px)');
@@ -138,12 +138,10 @@ export function GrowthPeakSection() {
       const rPos = getStagePoint(rightPath, eased);
 
       if (lPos) {
-        leftRunner.style.left = `${lPos.x}px`;
-        leftRunner.style.top = `${lPos.y}px`;
+        leftRunner.style.transform = `translate3d(${lPos.x}px, ${lPos.y}px, 0) translate(-50%, -50%)`;
       }
       if (rPos) {
-        rightRunner.style.left = `${rPos.x}px`;
-        rightRunner.style.top = `${rPos.y}px`;
+        rightRunner.style.transform = `translate3d(${rPos.x}px, ${rPos.y}px, 0) translate(-50%, -50%)`;
       }
 
       if (!triggered24 && eased >= 0.24) {
@@ -199,26 +197,28 @@ export function GrowthPeakSection() {
     <section
       ref={sectionRef}
       id="growth"
-      onMouseMove={(e) => {
+      onPointerMove={(e) => {
+        if (e.pointerType !== 'mouse' || !cursorGlowRef.current) return;
         const rect = e.currentTarget.getBoundingClientRect();
-        setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        cursorGlowRef.current.style.opacity = '1';
+        cursorGlowRef.current.style.transform = `translate3d(${e.clientX - rect.left}px, ${e.clientY - rect.top}px, 0) translate(-50%, -50%)`;
       }}
-      onMouseLeave={() => setCursorPos(null)}
+      onPointerLeave={() => {
+        if (cursorGlowRef.current) cursorGlowRef.current.style.opacity = '0';
+      }}
       className="relative overflow-hidden bg-gradient-to-b from-[#FFF7F8] via-white to-[#FFF5F6] text-[#0D0F14] py-16 sm:py-24 md:py-28 border-t border-black/[0.06]"
     >
-      {/* Subtle mouse-follow blush ambient light */}
-      {cursorPos && (
-        <div
-          aria-hidden="true"
-          style={{ left: cursorPos.x, top: cursorPos.y }}
-          className="hidden md:block pointer-events-none absolute w-[360px] h-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.09),transparent_70%)] blur-[50px] z-0"
-        />
-      )}
+      {/* Subtle desktop-only mouse-follow blush ambient light (zero React re-renders) */}
+      <div
+        ref={cursorGlowRef}
+        aria-hidden="true"
+        className="hidden md:block pointer-events-none absolute top-0 left-0 w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.085)_0%,rgba(225,29,53,0.025)_42%,transparent_72%)] opacity-0 transition-opacity duration-200 will-change-transform z-0"
+      />
 
       {/* Subtle top-left rose corner ambient glow */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-28 -left-28 w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.08),transparent_70%)] blur-[70px]"
+        className="pointer-events-none absolute -top-28 -left-28 w-[460px] h-[460px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.08)_0%,rgba(225,29,53,0.02)_45%,transparent_72%)]"
       />
 
       <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-8">
@@ -249,7 +249,7 @@ export function GrowthPeakSection() {
           {/* Central Crimson Blush Atmosphere Glow (pulses brighter on summit collision) */}
           <div
             aria-hidden="true"
-            className={`pointer-events-none absolute left-1/2 top-[30%] md:top-[34%] -translate-x-1/2 -translate-y-1/2 w-[300px] h-[250px] md:w-[560px] md:h-[420px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.16),rgba(255,107,74,0.06)_45%,transparent_72%)] blur-[52px] md:blur-[60px] transition-all duration-1000 ${
+            className={`pointer-events-none absolute left-1/2 top-[30%] md:top-[34%] -translate-x-1/2 -translate-y-1/2 w-[340px] h-[280px] md:w-[620px] md:h-[460px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.14)_0%,rgba(255,107,74,0.05)_44%,transparent_72%)] transition-[opacity,transform] duration-1000 ${
               isBoom ? 'opacity-90 scale-110' : 'opacity-30 scale-90'
             }`}
           />
@@ -333,7 +333,7 @@ export function GrowthPeakSection() {
               vectorEffect="non-scaling-stroke"
               strokeLinecap="round"
               strokeLinejoin="round"
-              filter="url(#promosCrimsonGlow)"
+              filter={isDesktop ? 'url(#promosCrimsonGlow)' : undefined}
               style={{ opacity: 0 }}
             />
             <path
@@ -345,7 +345,7 @@ export function GrowthPeakSection() {
               vectorEffect="non-scaling-stroke"
               strokeLinecap="round"
               strokeLinejoin="round"
-              filter="url(#promosCrimsonGlow)"
+              filter={isDesktop ? 'url(#promosCrimsonGlow)' : undefined}
               style={{ opacity: 0 }}
             />
           </svg>
@@ -354,17 +354,17 @@ export function GrowthPeakSection() {
           <span
             ref={leftRunnerRef}
             aria-hidden="true"
-            className="fps-runner-ring pointer-events-none absolute z-[14] w-3 h-3 md:w-3.5 md:h-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E11D35] text-[#E11D35] shadow-[0_0_8px_#fff,0_0_16px_#E11D35,0_0_28px_rgba(225,29,53,0.75)] opacity-0"
+            className="fps-runner-ring pointer-events-none absolute top-0 left-0 z-[14] w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-[#E11D35] text-[#E11D35] shadow-[0_0_8px_#fff,0_0_16px_#E11D35,0_0_28px_rgba(225,29,53,0.75)] opacity-0 will-change-transform"
           />
           <span
             ref={rightRunnerRef}
             aria-hidden="true"
-            className="fps-runner-ring pointer-events-none absolute z-[14] w-3 h-3 md:w-3.5 md:h-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FF6B4A] text-[#FF6B4A] shadow-[0_0_8px_#fff,0_0_16px_#FF6B4A,0_0_28px_rgba(255,107,74,0.75)] opacity-0"
+            className="fps-runner-ring pointer-events-none absolute top-0 left-0 z-[14] w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-[#FF6B4A] text-[#FF6B4A] shadow-[0_0_8px_#fff,0_0_16px_#FF6B4A,0_0_28px_rgba(255,107,74,0.75)] opacity-0 will-change-transform"
           />
 
           {/* Progress Step Labels along the slopes (compact on mobile, full on desktop) */}
           <div
-            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] left-[13%] sm:left-[20%] md:left-[25%] bottom-[198px] sm:bottom-[205px] md:bottom-[210px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
+            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] left-[13%] sm:left-[20%] md:left-[25%] bottom-[198px] sm:bottom-[205px] md:bottom-[210px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white md:bg-white/95 md:backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-[opacity,transform] duration-500 ${
               step24Visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
           >
@@ -372,7 +372,7 @@ export function GrowthPeakSection() {
             Trust
           </div>
           <div
-            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] left-[22%] sm:left-[30%] md:left-[36%] top-[210px] sm:top-[230px] md:top-[275px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
+            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] left-[22%] sm:left-[30%] md:left-[36%] top-[210px] sm:top-[230px] md:top-[275px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white md:bg-white/95 md:backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-[opacity,transform] duration-500 ${
               step62Visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
           >
@@ -380,7 +380,7 @@ export function GrowthPeakSection() {
             Authority
           </div>
           <div
-            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] right-[13%] sm:right-[20%] md:right-[25%] bottom-[198px] sm:bottom-[205px] md:bottom-[210px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
+            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] right-[13%] sm:right-[20%] md:right-[25%] bottom-[198px] sm:bottom-[205px] md:bottom-[210px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white md:bg-white/95 md:backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-[opacity,transform] duration-500 ${
               step24Visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
           >
@@ -388,7 +388,7 @@ export function GrowthPeakSection() {
             Reach
           </div>
           <div
-            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] right-[20%] sm:right-[29%] md:right-[36%] top-[210px] sm:top-[230px] md:top-[275px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
+            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] right-[20%] sm:right-[29%] md:right-[36%] top-[210px] sm:top-[230px] md:top-[275px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white md:bg-white/95 md:backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-[opacity,transform] duration-500 ${
               step62Visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
           >
@@ -429,7 +429,7 @@ export function GrowthPeakSection() {
                 />
               ))}
 
-              {/* 42 Outward Burst Particles */}
+              {/* 42 Outward Burst Particles (half on mobile for lighter paint) */}
               {burstDots.map((dot, idx) => (
                 <span
                   key={idx}
@@ -444,7 +444,9 @@ export function GrowthPeakSection() {
                       '--dur': dot.dur,
                     } as CSSProperties
                   }
-                  className="fps-particle-active absolute left-0 top-0 rounded-full"
+                  className={`fps-particle-active absolute left-0 top-0 rounded-full ${
+                    idx >= 22 ? 'hidden sm:block' : ''
+                  }`}
                 />
               ))}
             </div>
@@ -526,7 +528,7 @@ export function GrowthPeakSection() {
           {/* Equal-Height Symmetric Bottom Cards (2-col matched height on mobile, corner-anchored on desktop) */}
           <div className="absolute inset-x-0 bottom-2 sm:bottom-4 md:bottom-8 z-[18] grid grid-cols-2 md:flex md:items-stretch md:justify-between gap-2.5 sm:gap-4 md:px-[1%]">
             {/* Left Channel Card: Organic content */}
-            <div className="h-full md:w-[295px] p-3.5 sm:p-5 rounded-2xl border border-black/[0.08] bg-white/95 backdrop-blur-xl shadow-[0_18px_45px_-22px_rgba(13,15,20,0.16)] hover:-translate-y-1 hover:border-[#E11D35]/40 transition-all duration-300 flex flex-col">
+            <div className="h-full md:w-[295px] p-3.5 sm:p-5 rounded-2xl border border-black/[0.08] bg-white md:bg-white/95 md:backdrop-blur-xl shadow-[0_18px_45px_-22px_rgba(13,15,20,0.16)] hover:-translate-y-1 hover:border-[#E11D35]/40 transition-[transform,border-color] duration-300 flex flex-col">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg sm:rounded-xl border border-[#E11D35]/20 bg-[#FFF2F4] flex items-center justify-center text-[#E11D35] shrink-0">
                   <Sprout className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -546,7 +548,7 @@ export function GrowthPeakSection() {
             </div>
 
             {/* Right Channel Card: Paid promotion */}
-            <div className="h-full md:w-[295px] p-3.5 sm:p-5 rounded-2xl border border-black/[0.08] bg-white/95 backdrop-blur-xl shadow-[0_18px_45px_-22px_rgba(13,15,20,0.16)] hover:-translate-y-1 hover:border-[#FF6B4A]/45 transition-all duration-300 flex flex-col">
+            <div className="h-full md:w-[295px] p-3.5 sm:p-5 rounded-2xl border border-black/[0.08] bg-white md:bg-white/95 md:backdrop-blur-xl shadow-[0_18px_45px_-22px_rgba(13,15,20,0.16)] hover:-translate-y-1 hover:border-[#FF6B4A]/45 transition-[transform,border-color] duration-300 flex flex-col">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg sm:rounded-xl border border-[#FF6B4A]/25 bg-[#FFF4F0] flex items-center justify-center text-[#EA4C2B] shrink-0">
                   <Zap className="w-4 h-4 sm:w-5 sm:h-5" />

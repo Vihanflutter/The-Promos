@@ -86,6 +86,7 @@ export function ProtocolSection() {
                         alt={step.imageAlt}
                         referrerPolicy="no-referrer"
                         loading="lazy"
+                        decoding="async"
                         initial={{ scale: 1.07 }}
                         whileInView={{ scale: 1 }}
                         viewport={{ once: true, amount: 0.25 }}

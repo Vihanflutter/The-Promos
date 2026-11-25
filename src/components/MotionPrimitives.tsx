@@ -102,7 +102,8 @@ interface SpotlightSurfaceProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Adds a subtle, modern cursor-tracking radial spotlight sheen over cards without changing layout.
+ * Adds a subtle, modern cursor-tracking radial spotlight sheen over cards on desktop hover devices.
+ * Uses direct DOM style updates instead of React state for zero re-render overhead.
  */
 export function SpotlightSurface({
   children,
@@ -111,33 +112,33 @@ export function SpotlightSurface({
   glowSize = 320,
   ...rest
 }: SpotlightSurfaceProps) {
-  const [spot, setSpot] = useState<{ x: number; y: number; visible: boolean }>({
-    x: 0,
-    y: 0,
-    visible: false,
-  });
+  const glowRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
       {...rest}
-      onMouseMove={(e) => {
+      onPointerMove={(e) => {
+        if (e.pointerType !== 'mouse' || !glowRef.current) return;
         const rect = e.currentTarget.getBoundingClientRect();
-        setSpot({ x: e.clientX - rect.left, y: e.clientY - rect.top, visible: true });
-        rest.onMouseMove?.(e);
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        glowRef.current.style.opacity = '1';
+        glowRef.current.style.background = `radial-gradient(${glowSize}px circle at ${x}px ${y}px, ${glowColor}, transparent 70%)`;
+        rest.onPointerMove?.(e);
       }}
-      onMouseLeave={(e) => {
-        setSpot((prev) => ({ ...prev, visible: false }));
-        rest.onMouseLeave?.(e);
+      onPointerLeave={(e) => {
+        if (glowRef.current) {
+          glowRef.current.style.opacity = '0';
+        }
+        rest.onPointerLeave?.(e);
       }}
       className={`relative overflow-hidden ${className}`}
     >
       <div
+        ref={glowRef}
         aria-hidden="true"
-        style={{
-          opacity: spot.visible ? 1 : 0,
-          background: `radial-gradient(${glowSize}px circle at ${spot.x}px ${spot.y}px, ${glowColor}, transparent 70%)`,
-        }}
-        className="pointer-events-none absolute inset-0 transition-opacity duration-300 z-0"
+        style={{ opacity: 0 }}
+        className="hidden md:block pointer-events-none absolute inset-0 transition-opacity duration-300 z-0"
       />
       {children}
     </div>

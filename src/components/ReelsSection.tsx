@@ -1,4 +1,5 @@
 import { Pause, Play, Volume2, VolumeX } from 'lucide-react';
+import { useInView } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { REELS, type ReelItem } from '../data/content';
 import { Reveal } from './MotionPrimitives';
@@ -8,6 +9,8 @@ interface ReelsSectionProps {
 }
 
 export function ReelsSection(_props: ReelsSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isSectionVisible = useInView(sectionRef, { margin: '200px 0px' });
   const [reels, setReels] = useState<ReelItem[]>(REELS);
   const [playingKey, setPlayingKey] = useState<string | null>(null);
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
@@ -49,7 +52,6 @@ export function ReelsSection(_props: ReelsSectionProps) {
     const playPromise = vid.play();
     if (playPromise && typeof playPromise.catch === 'function') {
       playPromise.catch(() => {
-        // Fallback to muted playback if browser autoplay policy blocks unmuted play
         vid.muted = true;
         setIsMuted(true);
         void vid.play();
@@ -65,7 +67,7 @@ export function ReelsSection(_props: ReelsSectionProps) {
 
   // Duplicate list once for seamless continuous marquee loop
   const trackItems = [...reels, ...reels];
-  const shouldPause = hoveredKey !== null || playingKey !== null;
+  const shouldPause = !isSectionVisible || hoveredKey !== null || playingKey !== null;
 
   const handleTogglePlay = (cardKey: string) => {
     if (playingKey === cardKey) {
@@ -78,11 +80,12 @@ export function ReelsSection(_props: ReelsSectionProps) {
 
   return (
     <section
+      ref={sectionRef}
       id="reels"
       className="py-22 sm:py-28 bg-white border-t border-[#0D0F14]/[0.05] overflow-hidden"
     >
       <div className="max-w-[1200px] mx-auto px-5 sm:px-8">
-        <Reveal className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <Reveal className="mb-10">
           <div>
             <div className="inline-flex items-center gap-3 text-[12px] font-semibold tracking-[0.16em] uppercase text-[#8E1222]">
               <span className="w-7 h-px bg-[#E11D35]" aria-hidden="true" />
@@ -93,14 +96,10 @@ export function ReelsSection(_props: ReelsSectionProps) {
               <span className="font-editorial italic font-semibold text-[#E11D35]">reels.</span>
             </h2>
           </div>
-
-          <p className="text-[13.5px] text-[#666D7A]">
-            Hover any reel to pause · Click to play
-          </p>
         </Reveal>
       </div>
 
-      {/* Continuous Seamless Auto-Scrolling Carousel (pauses cleanly when hovering or playing any reel) */}
+      {/* Continuous Seamless Auto-Scrolling Carousel (pauses cleanly when offscreen, hovering, or playing) */}
       <Reveal delay={0.08} y={20} className="relative w-full">
         {/* Soft horizontal edge fades */}
         <div
@@ -160,6 +159,7 @@ export function ReelsSection(_props: ReelsSectionProps) {
                     poster={reel.thumbnail}
                     playsInline
                     loop
+                    preload="auto"
                     muted={isMuted}
                     onTimeUpdate={(e) => {
                       const el = e.currentTarget;
@@ -174,6 +174,8 @@ export function ReelsSection(_props: ReelsSectionProps) {
                     src={reel.thumbnail}
                     alt={reel.title}
                     referrerPolicy="no-referrer"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover object-center group-hover/card:scale-[1.05] transition-transform duration-500 ease-out"
                   />
                 )}

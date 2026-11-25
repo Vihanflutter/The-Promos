@@ -27,7 +27,7 @@ export function FoundersSection() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-[24%] left-1/2 -translate-x-1/2 w-[620px] h-[340px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.1),transparent_70%)] blur-[72px]"
+        className="pointer-events-none absolute top-[20%] left-1/2 -translate-x-1/2 w-[660px] h-[380px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.09),transparent_68%)]"
       />
 
       <div className="relative z-10 max-w-[1120px] mx-auto px-5 sm:px-8">
@@ -54,7 +54,7 @@ export function FoundersSection() {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.68, delay: idx * 0.12, ease: EASE_EDITORIAL }}
               whileHover={{ y: -6 }}
-              className="group relative rounded-3xl border border-black/[0.08] bg-white/95 backdrop-blur-xl px-6 sm:px-8 pt-20 pb-7 text-center shadow-[0_22px_55px_-24px_rgba(13,15,20,0.16)] hover:border-[#E11D35]/40 hover:shadow-[0_28px_65px_-22px_rgba(225,29,53,0.2)] transition-colors duration-300 flex flex-col justify-between"
+              className="group relative rounded-3xl border border-black/[0.08] bg-white md:bg-white/95 md:backdrop-blur-xl px-6 sm:px-8 pt-20 pb-7 text-center shadow-[0_22px_55px_-24px_rgba(13,15,20,0.16)] hover:border-[#E11D35]/40 hover:shadow-[0_28px_65px_-22px_rgba(225,29,53,0.2)] transition-colors duration-300 flex flex-col justify-between"
             >
               {/* Floating Circular Portrait Pulled Above Top Border */}
               <motion.div
@@ -79,6 +79,8 @@ export function FoundersSection() {
                     src={founder.image}
                     alt={`${founder.name}, Founder at The Promos`}
                     referrerPolicy="no-referrer"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
                   />
                 </div>
@@ -147,7 +149,7 @@ export function FoundersSection() {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.65, delay: idx * 0.1, ease: EASE_EDITORIAL }}
               whileHover={{ y: -6 }}
-              className="group relative rounded-3xl border border-black/[0.08] bg-white/95 backdrop-blur-xl px-6 pt-20 pb-7 text-center shadow-[0_22px_55px_-24px_rgba(13,15,20,0.16)] hover:border-[#E11D35]/40 hover:shadow-[0_28px_65px_-22px_rgba(225,29,53,0.2)] transition-colors duration-300 flex flex-col justify-start"
+              className="group relative rounded-3xl border border-black/[0.08] bg-white md:bg-white/95 md:backdrop-blur-xl px-6 pt-20 pb-7 text-center shadow-[0_22px_55px_-24px_rgba(13,15,20,0.16)] hover:border-[#E11D35]/40 hover:shadow-[0_28px_65px_-22px_rgba(225,29,53,0.2)] transition-colors duration-300 flex flex-col justify-start"
             >
               {/* Floating Circular Portrait Pulled Above Top Border */}
               <motion.div
@@ -173,6 +175,8 @@ export function FoundersSection() {
                       src={member.image}
                       alt={`${member.name}, ${member.role} at The Promos`}
                       referrerPolicy="no-referrer"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
                     />
                   </div>
