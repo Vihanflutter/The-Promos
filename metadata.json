@@ -1,0 +1,6 @@
+{
+  "name": "The Promos — Personal Branding Agency",
+  "description": "Personal branding for founders, educators and creators. Done-for-you strategy, scripting, shooting, editing and publishing by The Promos (thepromos.in).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
