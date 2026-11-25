@@ -35,7 +35,16 @@ export function GrowthPeakSection() {
   const [step62Visible, setStep62Visible] = useState(false);
   const [isBoom, setIsBoom] = useState(false);
   const [boomCycle, setBoomCycle] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(true);
   const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const sync = () => setIsDesktop(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
 
   // Deterministic radial burst particles tuned for crisp visibility on light white/blush surface
   const burstDots = useMemo<BurstDot[]>(() => {
@@ -175,7 +184,7 @@ export function GrowthPeakSection() {
           }
         }
       },
-      { threshold: 0.24 }
+      { threshold: 0.2 }
     );
 
     observer.observe(section);
@@ -195,7 +204,7 @@ export function GrowthPeakSection() {
         setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
       }}
       onMouseLeave={() => setCursorPos(null)}
-      className="relative overflow-hidden bg-gradient-to-b from-[#FFF7F8] via-white to-[#FFF5F6] text-[#0D0F14] py-20 sm:py-28 border-t border-black/[0.06]"
+      className="relative overflow-hidden bg-gradient-to-b from-[#FFF7F8] via-white to-[#FFF5F6] text-[#0D0F14] py-16 sm:py-24 md:py-28 border-t border-black/[0.06]"
     >
       {/* Subtle mouse-follow blush ambient light */}
       {cursorPos && (
@@ -212,7 +221,7 @@ export function GrowthPeakSection() {
         className="pointer-events-none absolute -top-28 -left-28 w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.08),transparent_70%)] blur-[70px]"
       />
 
-      <div className="relative z-10 max-w-[1200px] mx-auto px-5 sm:px-8">
+      <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-8">
         {/* Header Block */}
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-[#E11D35]/15 bg-[#FFF2F4] text-[10.5px] font-bold tracking-[0.16em] uppercase text-[#8E1222]">
@@ -220,38 +229,38 @@ export function GrowthPeakSection() {
             Two paths. One peak.
           </div>
 
-          <h2 className="mt-5 font-display text-[clamp(2.25rem,4.6vw,4.1rem)] font-extrabold leading-[1.04] tracking-[-0.035em] text-[#0D0F14] [text-wrap:balance]">
+          <h2 className="mt-4 sm:mt-5 font-display text-[clamp(2.1rem,4.6vw,4.1rem)] font-extrabold leading-[1.06] tracking-[-0.035em] text-[#0D0F14] [text-wrap:balance]">
             Build trust.
             <br />
             <span className="fps-gradient-text">Extend your reach.</span>
           </h2>
 
-          <p className="mt-4 text-[15.5px] sm:text-[18px] leading-[1.65] text-[#4C525E] max-w-[660px] mx-auto">
+          <p className="mt-3.5 sm:mt-4 text-[14.5px] sm:text-[18px] leading-[1.6] sm:leading-[1.65] text-[#4C525E] max-w-[660px] mx-auto">
             We turn your expertise into reels and use paid promotion to bring your best
             content to a wider audience.
           </p>
         </div>
 
-        {/* Interactive Convergence Stage */}
+        {/* Unified Desktop-Matched Stage (Symmetric Side-by-Side Cards + Steep Converging Curves on Mobile & Desktop) */}
         <div
           ref={stageRef}
-          className="relative mt-6 sm:mt-8 h-[520px] sm:h-[600px] md:h-[640px] w-full"
+          className="relative mt-6 sm:mt-8 h-[495px] sm:h-[550px] md:h-[640px] w-full"
         >
           {/* Central Crimson Blush Atmosphere Glow (pulses brighter on summit collision) */}
           <div
             aria-hidden="true"
-            className={`pointer-events-none absolute left-1/2 top-[34%] -translate-x-1/2 -translate-y-1/2 w-[560px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.16),rgba(255,107,74,0.06)_45%,transparent_72%)] blur-[60px] transition-all duration-1000 ${
+            className={`pointer-events-none absolute left-1/2 top-[30%] md:top-[34%] -translate-x-1/2 -translate-y-1/2 w-[300px] h-[250px] md:w-[560px] md:h-[420px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.16),rgba(255,107,74,0.06)_45%,transparent_72%)] blur-[52px] md:blur-[60px] transition-all duration-1000 ${
               isBoom ? 'opacity-90 scale-110' : 'opacity-30 scale-90'
             }`}
           />
 
-          {/* SVG Converging Mountain Curves */}
+          {/* SVG Converging Mountain Curves (sweeps steeply from the two bottom cards up into the summit peak) */}
           <svg
             ref={svgRef}
             viewBox="0 0 1500 660"
-            preserveAspectRatio="xMidYMid meet"
+            preserveAspectRatio={isDesktop ? 'xMidYMid meet' : 'none'}
             aria-hidden="true"
-            className="absolute inset-0 w-full h-full z-[6] overflow-visible pointer-events-none"
+            className="absolute inset-x-0 top-[76px] h-[285px] sm:top-[70px] sm:h-[345px] md:inset-0 md:h-full w-full z-[6] overflow-visible pointer-events-none"
           >
             <defs>
               <linearGradient id="promosOrganicGrad" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -267,7 +276,7 @@ export function GrowthPeakSection() {
               </linearGradient>
 
               <linearGradient id="promosMountainFill" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="rgba(225,29,53,0.11)" />
+                <stop offset="0%" stopColor="rgba(225,29,53,0.12)" />
                 <stop offset="55%" stopColor="rgba(225,29,53,0.035)" />
                 <stop offset="100%" stopColor="rgba(255,255,255,0)" />
               </linearGradient>
@@ -295,7 +304,8 @@ export function GrowthPeakSection() {
               d={LEFT_PATH_D}
               fill="none"
               stroke="rgba(225,29,53,0.14)"
-              strokeWidth="16"
+              strokeWidth={isDesktop ? '16' : '11'}
+              vectorEffect="non-scaling-stroke"
               strokeLinecap="round"
               className={`transition-opacity duration-700 ${
                 isBoom ? 'opacity-100' : 'opacity-0'
@@ -305,7 +315,8 @@ export function GrowthPeakSection() {
               d={RIGHT_PATH_D}
               fill="none"
               stroke="rgba(255,107,74,0.13)"
-              strokeWidth="16"
+              strokeWidth={isDesktop ? '16' : '11'}
+              vectorEffect="non-scaling-stroke"
               strokeLinecap="round"
               className={`transition-opacity duration-700 ${
                 isBoom ? 'opacity-100' : 'opacity-0'
@@ -318,7 +329,8 @@ export function GrowthPeakSection() {
               d={LEFT_PATH_D}
               fill="none"
               stroke="url(#promosOrganicGrad)"
-              strokeWidth="5"
+              strokeWidth={isDesktop ? '5' : '3.5'}
+              vectorEffect="non-scaling-stroke"
               strokeLinecap="round"
               strokeLinejoin="round"
               filter="url(#promosCrimsonGlow)"
@@ -329,7 +341,8 @@ export function GrowthPeakSection() {
               d={RIGHT_PATH_D}
               fill="none"
               stroke="url(#promosPaidGrad)"
-              strokeWidth="5"
+              strokeWidth={isDesktop ? '5' : '3.5'}
+              vectorEffect="non-scaling-stroke"
               strokeLinecap="round"
               strokeLinejoin="round"
               filter="url(#promosCrimsonGlow)"
@@ -341,17 +354,17 @@ export function GrowthPeakSection() {
           <span
             ref={leftRunnerRef}
             aria-hidden="true"
-            className="fps-runner-ring pointer-events-none absolute z-[14] w-3.5 h-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E11D35] text-[#E11D35] shadow-[0_0_8px_#fff,0_0_16px_#E11D35,0_0_28px_rgba(225,29,53,0.75)] opacity-0"
+            className="fps-runner-ring pointer-events-none absolute z-[14] w-3 h-3 md:w-3.5 md:h-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E11D35] text-[#E11D35] shadow-[0_0_8px_#fff,0_0_16px_#E11D35,0_0_28px_rgba(225,29,53,0.75)] opacity-0"
           />
           <span
             ref={rightRunnerRef}
             aria-hidden="true"
-            className="fps-runner-ring pointer-events-none absolute z-[14] w-3.5 h-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FF6B4A] text-[#FF6B4A] shadow-[0_0_8px_#fff,0_0_16px_#FF6B4A,0_0_28px_rgba(255,107,74,0.75)] opacity-0"
+            className="fps-runner-ring pointer-events-none absolute z-[14] w-3 h-3 md:w-3.5 md:h-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FF6B4A] text-[#FF6B4A] shadow-[0_0_8px_#fff,0_0_16px_#FF6B4A,0_0_28px_rgba(255,107,74,0.75)] opacity-0"
           />
 
-          {/* Progress Step Labels along the slopes (desktop/tablet) */}
+          {/* Progress Step Labels along the slopes (compact on mobile, full on desktop) */}
           <div
-            className={`hidden md:flex items-center gap-2 absolute z-[12] left-[25%] bottom-[210px] px-3 py-1.5 rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_10px_24px_-10px_rgba(13,15,20,0.16)] text-[10px] font-bold tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
+            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] left-[13%] sm:left-[20%] md:left-[25%] bottom-[198px] sm:bottom-[205px] md:bottom-[210px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
               step24Visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
           >
@@ -359,7 +372,7 @@ export function GrowthPeakSection() {
             Trust
           </div>
           <div
-            className={`hidden md:flex items-center gap-2 absolute z-[12] left-[36%] top-[275px] px-3 py-1.5 rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_10px_24px_-10px_rgba(13,15,20,0.16)] text-[10px] font-bold tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
+            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] left-[22%] sm:left-[30%] md:left-[36%] top-[210px] sm:top-[230px] md:top-[275px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
               step62Visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
           >
@@ -367,7 +380,7 @@ export function GrowthPeakSection() {
             Authority
           </div>
           <div
-            className={`hidden md:flex items-center gap-2 absolute z-[12] right-[25%] bottom-[210px] px-3 py-1.5 rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_10px_24px_-10px_rgba(13,15,20,0.16)] text-[10px] font-bold tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
+            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] right-[13%] sm:right-[20%] md:right-[25%] bottom-[198px] sm:bottom-[205px] md:bottom-[210px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
               step24Visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
           >
@@ -375,7 +388,7 @@ export function GrowthPeakSection() {
             Reach
           </div>
           <div
-            className={`hidden md:flex items-center gap-2 absolute z-[12] right-[36%] top-[275px] px-3 py-1.5 rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_10px_24px_-10px_rgba(13,15,20,0.16)] text-[10px] font-bold tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
+            className={`flex items-center gap-1.5 md:gap-2 absolute z-[12] right-[20%] sm:right-[29%] md:right-[36%] top-[210px] sm:top-[230px] md:top-[275px] px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg border border-black/[0.08] bg-white/95 backdrop-blur-md shadow-[0_8px_20px_-8px_rgba(13,15,20,0.16)] text-[8.5px] md:text-[10px] font-bold tracking-[0.1em] md:tracking-[0.12em] uppercase text-[#0D0F14] transition-all duration-500 ${
               step62Visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
           >
@@ -388,24 +401,24 @@ export function GrowthPeakSection() {
             <div
               key={`boom-${boomCycle}`}
               aria-hidden="true"
-              className="pointer-events-none absolute left-1/2 top-[23%] z-[20]"
+              className="pointer-events-none absolute left-1/2 top-[140px] sm:top-[148px] md:top-[23%] z-[20]"
             >
               {/* 3 Concentric Shockwaves */}
               <span
-                className="fps-shockwave-active absolute w-24 h-24 rounded-full border border-[#E11D35]/75"
+                className="fps-shockwave-active absolute w-20 h-20 md:w-24 md:h-24 rounded-full border border-[#E11D35]/75"
                 style={{ animationDelay: '0s' }}
               />
               <span
-                className="fps-shockwave-active absolute w-24 h-24 rounded-full border border-[#FF4D6D]/55"
+                className="fps-shockwave-active absolute w-20 h-20 md:w-24 md:h-24 rounded-full border border-[#FF4D6D]/55"
                 style={{ animationDelay: '0.14s' }}
               />
               <span
-                className="fps-shockwave-active absolute w-24 h-24 rounded-full border border-[#FF6B4A]/45"
+                className="fps-shockwave-active absolute w-20 h-20 md:w-24 md:h-24 rounded-full border border-[#FF6B4A]/45"
                 style={{ animationDelay: '0.28s' }}
               />
 
               {/* Central Energy Flash */}
-              <span className="fps-flash-active absolute w-28 h-28 rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.65)_0%,rgba(255,77,109,0.4)_38%,transparent_72%)] blur-[8px]" />
+              <span className="fps-flash-active absolute w-24 h-24 md:w-28 md:h-28 rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.65)_0%,rgba(255,77,109,0.4)_38%,transparent_72%)] blur-[8px]" />
 
               {/* 8 Radial Burst Rays */}
               {RAY_ANGLES.map((deg) => (
@@ -439,7 +452,7 @@ export function GrowthPeakSection() {
 
           {/* Summit Core Reveal (Hidden until collision) */}
           <div
-            className={`absolute left-1/2 top-[11%] sm:top-[12%] z-[25] w-[260px] text-center ${
+            className={`absolute left-1/2 top-[18px] sm:top-[24px] md:top-[10%] z-[25] w-[240px] sm:w-[260px] text-center ${
               isBoom
                 ? 'fps-summit-boom pointer-events-auto'
                 : 'opacity-0 -translate-x-1/2 scale-75 pointer-events-none'
@@ -450,23 +463,23 @@ export function GrowthPeakSection() {
               type="button"
               onClick={runAnimation}
               title="Replay growth convergence animation"
-              className="fps-peak-float group relative mx-auto w-[92px] h-[92px] rounded-full flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D35]"
+              className="fps-peak-float group relative mx-auto w-[70px] h-[70px] sm:w-[78px] sm:h-[78px] md:w-[92px] md:h-[92px] rounded-full flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D35]"
             >
               <span
                 aria-hidden="true"
-                className="fps-ring-spin absolute -inset-6 rounded-full border border-dashed border-[#E11D35]/45 group-hover:border-[#E11D35]/75 transition-colors"
+                className="fps-ring-spin absolute -inset-3 md:-inset-5 rounded-full border border-dashed border-[#E11D35]/45 group-hover:border-[#E11D35]/75 transition-colors"
               />
               <span
                 aria-hidden="true"
-                className="absolute -inset-12 rounded-full border border-[#E11D35]/18"
+                className="absolute -inset-6 md:-inset-10 rounded-full border border-[#E11D35]/18"
               />
-              <span className="relative w-[84px] h-[84px] rounded-full bg-[radial-gradient(circle_at_30%_26%,#FF8596_0%,#E11D35_48%,#8E1222_100%)] shadow-[0_14px_38px_-6px_rgba(225,29,53,0.65),inset_0_2px_10px_rgba(255,255,255,0.5)] flex items-center justify-center text-white group-hover:scale-105 transition-transform duration-200">
+              <span className="relative w-[64px] h-[64px] sm:w-[72px] sm:h-[72px] md:w-[84px] md:h-[84px] rounded-full bg-[radial-gradient(circle_at_30%_26%,#FF8596_0%,#E11D35_48%,#8E1222_100%)] shadow-[0_14px_38px_-6px_rgba(225,29,53,0.65),inset_0_2px_10px_rgba(255,255,255,0.5)] flex items-center justify-center text-white group-hover:scale-105 transition-transform duration-200">
                 {/* Brand-matched solid-white Megaphone + Animated Broadcast Reach Waves */}
                 <svg
                   viewBox="0 0 48 48"
                   fill="none"
                   aria-hidden="true"
-                  className="w-11 h-11 drop-shadow-[0_2px_6px_rgba(0,0,0,0.22)]"
+                  className="w-8 h-8 sm:w-9 sm:h-9 md:w-11 md:h-11 drop-shadow-[0_2px_6px_rgba(0,0,0,0.22)]"
                 >
                   {/* Solid Megaphone Body */}
                   <path
@@ -502,60 +515,63 @@ export function GrowthPeakSection() {
               </span>
             </button>
 
-            <p className="mt-4 text-[10px] font-bold tracking-[0.2em] uppercase text-[#6B7280]">
+            <p className="mt-8 sm:mt-9 md:mt-11 text-[9.5px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-[#6B7280]">
               Together
             </p>
-            <p className="mt-0.5 font-display text-[22px] sm:text-[25px] font-extrabold tracking-tight text-[#0D0F14]">
+            <p className="mt-0.5 font-display text-[20px] sm:text-[23px] md:text-[25px] font-extrabold tracking-tight text-[#0D0F14]">
               Audience <span className="text-[#E11D35]">growth</span>
             </p>
           </div>
 
-          {/* Left Channel Card: Organic content */}
-          <div className="absolute bottom-3 sm:bottom-8 left-0 sm:left-[1%] z-[18] w-[47.5%] sm:w-[295px] p-4 sm:p-5 rounded-2xl border border-black/[0.08] bg-white/95 backdrop-blur-xl shadow-[0_20px_50px_-22px_rgba(13,15,20,0.16)] hover:-translate-y-1.5 hover:border-[#E11D35]/40 transition-all duration-300">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-[#E11D35]/20 bg-[#FFF2F4] flex items-center justify-center text-[#E11D35] shrink-0">
-                <Sprout className="w-5 h-5" />
+          {/* Equal-Height Symmetric Bottom Cards (2-col matched height on mobile, corner-anchored on desktop) */}
+          <div className="absolute inset-x-0 bottom-2 sm:bottom-4 md:bottom-8 z-[18] grid grid-cols-2 md:flex md:items-stretch md:justify-between gap-2.5 sm:gap-4 md:px-[1%]">
+            {/* Left Channel Card: Organic content */}
+            <div className="h-full md:w-[295px] p-3.5 sm:p-5 rounded-2xl border border-black/[0.08] bg-white/95 backdrop-blur-xl shadow-[0_18px_45px_-22px_rgba(13,15,20,0.16)] hover:-translate-y-1 hover:border-[#E11D35]/40 transition-all duration-300 flex flex-col">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg sm:rounded-xl border border-[#E11D35]/20 bg-[#FFF2F4] flex items-center justify-center text-[#E11D35] shrink-0">
+                  <Sprout className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-display text-[13.5px] sm:text-[16px] md:text-[18px] font-extrabold tracking-tight text-[#0D0F14] leading-tight">
+                    Organic content
+                  </h3>
+                  <p className="mt-0.5 text-[8.5px] sm:text-[9.5px] md:text-[10px] font-bold tracking-[0.08em] sm:tracking-[0.12em] uppercase text-[#6B7280]">
+                    Compounding trust
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h3 className="font-display text-[15px] sm:text-[18px] font-extrabold tracking-tight text-[#0D0F14] leading-tight">
-                  Organic content
-                </h3>
-                <p className="mt-0.5 text-[9px] sm:text-[10px] font-bold tracking-[0.12em] uppercase text-[#6B7280]">
-                  Compounding trust
-                </p>
-              </div>
+              <p className="mt-2 sm:mt-3 text-[11px] sm:text-[12.5px] md:text-[13px] leading-[1.45] sm:leading-[1.55] text-[#4C525E]">
+                Answer the questions your audience asks. Give people a reason to follow.
+              </p>
             </div>
-            <p className="mt-3 text-[12px] sm:text-[13px] leading-[1.55] text-[#4C525E]">
-              Answer the questions your audience asks. Give people a reason to follow.
-            </p>
-          </div>
 
-          {/* Right Channel Card: Paid promotion */}
-          <div className="absolute bottom-3 sm:bottom-8 right-0 sm:right-[1%] z-[18] w-[47.5%] sm:w-[295px] p-4 sm:p-5 rounded-2xl border border-black/[0.08] bg-white/95 backdrop-blur-xl shadow-[0_20px_50px_-22px_rgba(13,15,20,0.16)] hover:-translate-y-1.5 hover:border-[#FF6B4A]/45 transition-all duration-300">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl border border-[#FF6B4A]/25 bg-[#FFF4F0] flex items-center justify-center text-[#EA4C2B] shrink-0">
-                <Zap className="w-5 h-5" />
+            {/* Right Channel Card: Paid promotion */}
+            <div className="h-full md:w-[295px] p-3.5 sm:p-5 rounded-2xl border border-black/[0.08] bg-white/95 backdrop-blur-xl shadow-[0_18px_45px_-22px_rgba(13,15,20,0.16)] hover:-translate-y-1 hover:border-[#FF6B4A]/45 transition-all duration-300 flex flex-col">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-lg sm:rounded-xl border border-[#FF6B4A]/25 bg-[#FFF4F0] flex items-center justify-center text-[#EA4C2B] shrink-0">
+                  <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-display text-[13.5px] sm:text-[16px] md:text-[18px] font-extrabold tracking-tight text-[#0D0F14] leading-tight">
+                    Paid promotion
+                  </h3>
+                  <p className="mt-0.5 text-[8.5px] sm:text-[9.5px] md:text-[10px] font-bold tracking-[0.08em] sm:tracking-[0.12em] uppercase text-[#6B7280]">
+                    Accelerated reach
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h3 className="font-display text-[15px] sm:text-[18px] font-extrabold tracking-tight text-[#0D0F14] leading-tight">
-                  Paid promotion
-                </h3>
-                <p className="mt-0.5 text-[9px] sm:text-[10px] font-bold tracking-[0.12em] uppercase text-[#6B7280]">
-                  Accelerated reach
-                </p>
-              </div>
+              <p className="mt-2 sm:mt-3 text-[11px] sm:text-[12.5px] md:text-[13px] leading-[1.45] sm:leading-[1.55] text-[#4C525E]">
+                Bring your best-performing reels to people who haven&apos;t discovered you yet.
+              </p>
             </div>
-            <p className="mt-3 text-[12px] sm:text-[13px] leading-[1.55] text-[#4C525E]">
-              Bring your best-performing reels to people who haven&apos;t discovered you yet.
-            </p>
           </div>
         </div>
 
         {/* Bottom Divider */}
-        <div className="mt-4 flex items-center justify-center gap-4">
+        <div className="mt-5 md:mt-4 flex items-center justify-center gap-4">
           <span className="hidden sm:block h-px flex-1 max-w-[200px] bg-gradient-to-r from-transparent to-black/15" />
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-black/[0.08] bg-white shadow-[0_6px_20px_-10px_rgba(13,15,20,0.12)] text-[10.5px] font-bold tracking-[0.14em] uppercase text-[#4C525E]">
-            <TrendingUp className="w-3.5 h-3.5 text-[#E11D35]" />
+          <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full border border-black/[0.08] bg-white shadow-[0_6px_20px_-10px_rgba(13,15,20,0.12)] text-[9.5px] sm:text-[10.5px] font-bold tracking-[0.12em] sm:tracking-[0.14em] uppercase text-[#4C525E]">
+            <TrendingUp className="w-3.5 h-3.5 text-[#E11D35] shrink-0" />
             <span>Independent momentum. One shared peak.</span>
           </div>
           <span className="hidden sm:block h-px flex-1 max-w-[200px] bg-gradient-to-l from-transparent to-black/15" />

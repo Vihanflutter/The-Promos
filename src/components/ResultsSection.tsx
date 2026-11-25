@@ -1,4 +1,6 @@
+import { motion } from 'motion/react';
 import { CLIENT_RESULTS } from '../data/content';
+import { AnimatedMetric, EASE_EDITORIAL, Reveal, SpotlightSurface } from './MotionPrimitives';
 
 interface ConfettiPiece {
   left: string;
@@ -27,79 +29,108 @@ export function ResultsSection() {
   return (
     <section
       id="results"
-      className="py-20 sm:py-24 bg-gradient-to-b from-[#FFF6F7] via-[#FFFAFB] to-white"
+      className="relative py-22 sm:py-28 bg-gradient-to-b from-[#FFF4F6] via-[#FCFBF9] to-white border-t border-[#0D0F14]/[0.05] art-paper-grain"
     >
-      <div className="max-w-[960px] mx-auto px-5 sm:px-8">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto">
-          <div className="inline-block px-3.5 py-1 rounded border border-[#E11D35]/35 bg-[#FFF5F6] text-[11px] font-bold tracking-[0.14em] uppercase text-[#A3152A]">
-            Proven Results
+      <div className="max-w-[1000px] mx-auto px-5 sm:px-8">
+        {/* Editorial Section Header */}
+        <Reveal className="text-center max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-3 text-[12px] font-semibold tracking-[0.16em] uppercase text-[#8E1222]">
+            <span className="w-7 h-px bg-[#E11D35]" aria-hidden="true" />
+            <span>Proven Results</span>
+            <span className="w-7 h-px bg-[#E11D35]" aria-hidden="true" />
           </div>
-          <h2 className="mt-4 font-display text-[clamp(1.85rem,3.4vw,2.65rem)] font-extrabold tracking-tight text-[#0D0F14] [text-wrap:balance]">
-            Client Transformation <span className="text-[#E11D35]">Results</span>
+          <h2 className="mt-4 font-display text-[clamp(2rem,3.6vw,3rem)] font-extrabold tracking-[-0.03em] text-[#0D0F14] [text-wrap:balance]">
+            Client Transformation{' '}
+            <span className="font-editorial italic font-semibold text-[#E11D35]">Results</span>
           </h2>
-          <p className="mt-2.5 text-[15px] sm:text-[16px] text-[#555B66]">
+          <p className="mt-3 text-[15.5px] sm:text-[16.5px] text-[#555B66]">
             We work with business owners, entrepreneurs and professionals
           </p>
-        </div>
+        </Reveal>
 
-        {/* Transformation Cards */}
-        <div className="mt-12 space-y-6">
+        {/* Gallery-Framed Transformation Cards */}
+        <div className="mt-14 space-y-7">
           {CLIENT_RESULTS.map((client, cardIdx) => (
-            <article
+            <motion.article
               key={client.id}
-              className="relative grid grid-cols-1 md:grid-cols-12 rounded-2xl bg-white border border-black/[0.07] shadow-[0_14px_40px_-24px_rgba(13,15,20,0.16)] overflow-hidden"
+              initial={{ opacity: 0, y: 36, scale: 0.985 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.7, delay: cardIdx * 0.08, ease: EASE_EDITORIAL }}
+              whileHover={{ y: -4 }}
+              className="group relative rounded-[28px] bg-white border border-[#0D0F14]/[0.08] shadow-[0_24px_60px_-34px_rgba(13,15,20,0.2)] hover:border-[#E11D35]/35 hover:shadow-[0_30px_70px_-30px_rgba(225,29,53,0.2)] transition-colors duration-300 overflow-hidden"
             >
-              {/* Continuous Party-Popper Falling Confetti Overlay across the card */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 overflow-hidden z-20"
+              <SpotlightSurface
+                glowColor="rgba(225, 29, 53, 0.09)"
+                glowSize={380}
+                className="grid grid-cols-1 md:grid-cols-12"
               >
-                {FALLING_CONFETTI.map((piece, idx) => (
-                  <span
-                    key={`${client.id}-confetti-${idx}`}
-                    style={{
-                      left: piece.left,
-                      top: '-14px',
-                      width: `${piece.width}px`,
-                      height: `${piece.height}px`,
-                      backgroundColor: piece.color,
-                      animationDuration: piece.duration,
-                      animationDelay: `calc(${piece.delay} - ${cardIdx * 0.6}s)`,
-                    }}
-                    className="absolute rounded-[2px] animate-confetti-fall"
+                {/* Continuous Party-Popper Falling Confetti Overlay across the card */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 overflow-hidden z-20"
+                >
+                  {FALLING_CONFETTI.map((piece, idx) => (
+                    <span
+                      key={`${client.id}-confetti-${idx}`}
+                      style={{
+                        left: piece.left,
+                        top: '-14px',
+                        width: `${piece.width}px`,
+                        height: `${piece.height}px`,
+                        backgroundColor: piece.color,
+                        animationDuration: piece.duration,
+                        animationDelay: `calc(${piece.delay} - ${cardIdx * 0.6}s)`,
+                      }}
+                      className="absolute rounded-[2px] animate-confetti-fall"
+                    />
+                  ))}
+                </div>
+
+                {/* Left Side: Actual Uploaded Instagram Profile Screenshot */}
+                <div className="md:col-span-6 p-6 sm:p-8 bg-white/95 flex items-center justify-center relative z-10">
+                  <img
+                    src={client.profileImage}
+                    alt={`${client.displayName} (@${client.handle}) Instagram profile results`}
+                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                    className="w-full max-w-[395px] h-auto object-contain rounded-xl transition-transform duration-500 ease-out group-hover:scale-[1.025]"
                   />
-                ))}
-              </div>
+                </div>
 
-              {/* Left Side: Actual Uploaded Instagram Profile Screenshot */}
-              <div className="md:col-span-6 p-5 sm:p-6 bg-white flex items-center justify-center relative z-10">
-                <img
-                  src={client.profileImage}
-                  alt={`${client.displayName} (@${client.handle}) Instagram profile results`}
-                  referrerPolicy="no-referrer"
-                  loading="lazy"
-                  className="w-full max-w-[390px] h-auto object-contain rounded-lg"
-                />
-              </div>
+                {/* Right Side: Artistic Blush Rose Editorial Result Panel */}
+                <div className="md:col-span-6 relative p-8 sm:p-11 bg-gradient-to-br from-[#FFF3F5] via-[#FFF9FA] to-[#FCECEF] border-t md:border-t-0 md:border-l border-[#E11D35]/12 flex flex-col items-center justify-center text-center z-10 overflow-hidden">
+                  {/* Slowly rotating concentric gallery arc ornament */}
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 240 240"
+                    fill="none"
+                    className="pointer-events-none absolute -right-16 -bottom-16 w-56 h-56 opacity-50 animate-slow-spin"
+                  >
+                    <circle cx="120" cy="120" r="88" stroke="#E11D35" strokeOpacity="0.18" strokeWidth="1" />
+                    <circle cx="120" cy="120" r="62" stroke="#E11D35" strokeOpacity="0.16" strokeWidth="1.2" strokeDasharray="4 6" />
+                  </svg>
 
-              {/* Right Side: Blush Rose Follower Result Panel (Milestone Unlocked badge removed) */}
-              <div className="md:col-span-6 relative p-8 sm:p-10 bg-gradient-to-br from-[#FFF2F4] via-[#FFF8F9] to-[#FDECEF] border-t md:border-t-0 md:border-l border-[#E11D35]/10 flex flex-col items-center justify-center text-center z-10">
-                <p className="font-display text-[20px] sm:text-[23px] font-extrabold tracking-tight text-[#0D0F14]">
-                  @{client.handle}
-                </p>
+                  <span className="relative text-[11px] font-bold tracking-[0.18em] uppercase text-[#8E1222]/75">
+                    0{cardIdx + 1} · Verified Growth
+                  </span>
 
-                <p className="mt-2 font-display text-[28px] sm:text-[34px] font-extrabold tracking-tight text-[#A3152A] tabular-nums">
-                  {client.milestoneValue}
-                </p>
-
-                {client.milestoneSubtext && (
-                  <p className="mt-1.5 text-[14px] sm:text-[15px] font-medium text-[#555B66]">
-                    {client.milestoneSubtext}
+                  <p className="relative mt-2.5 font-display text-[19px] sm:text-[21px] font-bold tracking-tight text-[#0D0F14]">
+                    @{client.handle}
                   </p>
-                )}
-              </div>
-            </article>
+
+                  <p className="relative mt-2 font-editorial italic text-[32px] sm:text-[40px] font-semibold tracking-tight text-[#C4162C] leading-none tabular-nums">
+                    <AnimatedMetric value={client.milestoneValue} />
+                  </p>
+
+                  {client.milestoneSubtext && (
+                    <p className="relative mt-2.5 text-[14px] sm:text-[15px] font-medium text-[#555B66]">
+                      {client.milestoneSubtext}
+                    </p>
+                  )}
+                </div>
+              </SpotlightSurface>
+            </motion.article>
           ))}
         </div>
       </div>

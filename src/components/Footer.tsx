@@ -1,5 +1,7 @@
 import { ArrowRight, Globe, Instagram, Mail } from 'lucide-react';
+import { motion } from 'motion/react';
 import { LOGO_URL } from '../data/content';
+import { Reveal } from './MotionPrimitives';
 
 interface FooterProps {
   onOpenInquiry: (defaultPackage?: string) => void;
@@ -7,10 +9,16 @@ interface FooterProps {
 
 export function Footer({ onOpenInquiry }: FooterProps) {
   return (
-    <footer className="bg-[#0D0F14] text-white">
+    <footer className="relative overflow-hidden bg-[#0D0F14] text-white">
+      {/* Subtle breathing crimson ambient glow behind final CTA */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-24 right-[8%] w-[420px] h-[280px] rounded-full bg-[radial-gradient(circle,rgba(225,29,53,0.22),transparent_70%)] blur-[72px] animate-orb-pulse"
+      />
+
       {/* Final Conversion Band */}
-      <div className="border-b border-white/10">
-        <div className="max-w-[1100px] mx-auto px-5 sm:px-8 py-16 sm:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+      <div className="relative z-10 border-b border-white/10">
+        <Reveal className="max-w-[1100px] mx-auto px-5 sm:px-8 py-16 sm:py-20 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div className="max-w-xl">
             <h2 className="font-display text-[clamp(1.75rem,3.2vw,2.45rem)] font-extrabold tracking-tight leading-tight [text-wrap:balance]">
               Ready to build an audience around your{' '}
@@ -22,19 +30,22 @@ export function Footer({ onOpenInquiry }: FooterProps) {
             </p>
           </div>
 
-          <button
+          <motion.button
             type="button"
+            whileHover={{ scale: 1.03, y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 24 }}
             onClick={() => onOpenInquiry()}
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#E11D35] hover:bg-[#C4162C] active:scale-[0.98] text-white text-[15px] font-semibold transition-all duration-150 shadow-[0_12px_28px_-8px_rgba(225,29,53,0.6)] cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D0F14] focus-visible:ring-[#E11D35]"
+            className="btn-sheen group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#E11D35] hover:bg-[#C4162C] text-white text-[15px] font-semibold transition-colors duration-150 shadow-[0_12px_28px_-8px_rgba(225,29,53,0.6)] cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D0F14] focus-visible:ring-[#E11D35]"
           >
-            Start Growing Now
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
+            <span>Start Growing Now</span>
+            <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+          </motion.button>
+        </Reveal>
       </div>
 
       {/* Quiet Directory Footer */}
-      <div className="max-w-[1100px] mx-auto px-5 sm:px-8 py-12">
+      <div className="relative z-10 max-w-[1100px] mx-auto px-5 sm:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
           <div className="md:col-span-5 space-y-3">
             <a href="#top" className="inline-flex items-center gap-2.5">

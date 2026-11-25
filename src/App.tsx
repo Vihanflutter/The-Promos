@@ -1,3 +1,4 @@
+import { MotionConfig } from 'motion/react';
 import { useState } from 'react';
 import { FaqSection } from './components/FaqSection';
 import { Footer } from './components/Footer';
@@ -21,27 +22,29 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#0D0F14] flex flex-col">
-      <Navbar onOpenInquiry={handleOpenInquiry} />
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-screen bg-[#FCFBF9] text-[#0D0F14] flex flex-col">
+        <Navbar onOpenInquiry={handleOpenInquiry} />
 
-      <main className="flex-1">
-        <HeroSection onOpenInquiry={handleOpenInquiry} />
-        <ResultsSection />
-        <ReelsSection onOpenInquiry={handleOpenInquiry} />
-        <ProtocolSection />
-        <PackagesSection onSelectPackage={handleOpenInquiry} />
-        <GrowthPeakSection />
-        <FoundersSection />
-        <FaqSection />
-      </main>
+        <main className="flex-1">
+          <HeroSection onOpenInquiry={handleOpenInquiry} />
+          <ResultsSection />
+          <ReelsSection onOpenInquiry={handleOpenInquiry} />
+          <ProtocolSection />
+          <PackagesSection onSelectPackage={handleOpenInquiry} />
+          <GrowthPeakSection />
+          <FoundersSection />
+          <FaqSection />
+        </main>
 
-      <Footer onOpenInquiry={handleOpenInquiry} />
+        <Footer onOpenInquiry={handleOpenInquiry} />
 
-      <InquiryModal
-        isOpen={inquiryOpen}
-        initialPackage={selectedPackage}
-        onClose={() => setInquiryOpen(false)}
-      />
-    </div>
+        <InquiryModal
+          isOpen={inquiryOpen}
+          initialPackage={selectedPackage}
+          onClose={() => setInquiryOpen(false)}
+        />
+      </div>
+    </MotionConfig>
   );
 }

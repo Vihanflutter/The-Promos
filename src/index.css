@@ -2,11 +2,13 @@
 
 @theme {
   --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-editorial: "Fraunces", Georgia, serif;
 
   --color-brand-crimson: #E11D35;
   --color-brand-crimson-hover: #C4162C;
   --color-brand-burgundy: #8E1222;
+  --color-brand-ivory: #FCFBF9;
   --color-brand-blush: #FFF5F6;
   --color-brand-blush-soft: #FFF9FA;
   --color-brand-blush-tint: #FDECEF;
@@ -18,12 +20,45 @@
   html {
     font-family: var(--font-sans);
     color: var(--color-brand-ink);
-    background-color: #ffffff;
+    background-color: #FCFBF9;
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
   }
+}
+
+.font-editorial {
+  font-family: var(--font-editorial);
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+/* Whisper-subtle fine-art paper grain for editorial warmth */
+.art-paper-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.032'/%3E%3C/svg%3E");
+}
+
+/* Architectural editorial underline sweep */
+.editorial-nav-link {
+  position: relative;
+}
+
+.editorial-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1.5px;
+  background-color: #E11D35;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -308,6 +343,54 @@
 .fps-wave-pulse {
   transform-origin: center;
   animation: fpsWavePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes btnSheenSweep {
+  0% {
+    transform: translateX(-140%) skewX(-22deg);
+  }
+  28%, 100% {
+    transform: translateX(260%) skewX(-22deg);
+  }
+}
+
+.btn-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 45%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 100%
+  );
+  transform: translateX(-140%) skewX(-22deg);
+  animation: btnSheenSweep 4.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes topBarShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-bar-shimmer {
+  background-size: 200% 100%;
+  animation: topBarShimmer 3.6s linear infinite;
+}
+
+.animate-slow-spin {
+  animation: fpsRingSpin 28s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

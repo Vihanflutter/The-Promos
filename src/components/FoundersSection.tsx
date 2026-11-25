@@ -1,5 +1,7 @@
 import { ArrowUpRight, Instagram } from 'lucide-react';
+import { motion } from 'motion/react';
 import { CORE_TEAM, FOUNDERS } from '../data/content';
+import { EASE_EDITORIAL, Reveal } from './MotionPrimitives';
 
 export function FoundersSection() {
   // Dr. Anshuman Agarwal left, Dr. Sapana Agarwal right
@@ -30,7 +32,7 @@ export function FoundersSection() {
 
       <div className="relative z-10 max-w-[1120px] mx-auto px-5 sm:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto">
+        <Reveal className="text-center max-w-2xl mx-auto">
           <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-[#E11D35]/15 bg-[#FFF2F4] text-[10.5px] font-bold tracking-[0.18em] uppercase text-[#8E1222]">
             Meet The Minds
           </div>
@@ -40,17 +42,33 @@ export function FoundersSection() {
           <p className="mt-3 text-[15px] sm:text-[16.5px] text-[#4C525E]">
             Strategy, creativity, and execution. We are the team behind the screens.
           </p>
-        </div>
+        </Reveal>
 
         {/* Row 1: Two Founder Cards (floating avatar with spinning dashed crimson ring) */}
         <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-x-7 gap-y-20 max-w-[940px] mx-auto">
-          {orderedFounders.map((founder) => (
-            <article
+          {orderedFounders.map((founder, idx) => (
+            <motion.article
               key={founder.id}
-              className="group relative rounded-3xl border border-black/[0.08] bg-white/95 backdrop-blur-xl px-6 sm:px-8 pt-20 pb-7 text-center shadow-[0_22px_55px_-24px_rgba(13,15,20,0.16)] hover:border-[#E11D35]/40 hover:shadow-[0_26px_65px_-22px_rgba(225,29,53,0.18)] transition-all duration-300 flex flex-col justify-between"
+              initial={{ opacity: 0, y: 36 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.68, delay: idx * 0.12, ease: EASE_EDITORIAL }}
+              whileHover={{ y: -6 }}
+              className="group relative rounded-3xl border border-black/[0.08] bg-white/95 backdrop-blur-xl px-6 sm:px-8 pt-20 pb-7 text-center shadow-[0_22px_55px_-24px_rgba(13,15,20,0.16)] hover:border-[#E11D35]/40 hover:shadow-[0_28px_65px_-22px_rgba(225,29,53,0.2)] transition-colors duration-300 flex flex-col justify-between"
             >
               {/* Floating Circular Portrait Pulled Above Top Border */}
-              <div className="absolute -top-[70px] left-1/2 -translate-x-1/2 w-[140px] h-[140px]">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85, y: 16 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 260,
+                  damping: 22,
+                  delay: 0.12 + idx * 0.12,
+                }}
+                className="absolute -top-[70px] left-1/2 -translate-x-1/2 w-[140px] h-[140px]"
+              >
                 {/* Slowly Rotating Dashed Crimson Halo */}
                 <span
                   aria-hidden="true"
@@ -61,10 +79,10 @@ export function FoundersSection() {
                     src={founder.image}
                     alt={`${founder.name}, Founder at The Promos`}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover object-top"
+                    className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
                   />
                 </div>
-              </div>
+              </motion.div>
 
               <div>
                 {/* Role + Creator Badges */}
@@ -110,24 +128,40 @@ export function FoundersSection() {
                     </span>
                     <span className="flex items-center gap-1.5 text-[11px] text-[#6B7280] shrink-0">
                       <span className="hidden sm:inline">{link.sublabel}</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#6B7280] group-hover/link:text-[#E11D35] transition-colors" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#6B7280] group-hover/link:text-[#E11D35] group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-all" />
                     </span>
                   </a>
                 ))}
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
 
         {/* Row 2: Core Leadership Team (matching floating-portrait light card style) */}
         <div className="mt-28 grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-24">
-          {CORE_TEAM.map((member) => (
-            <article
+          {CORE_TEAM.map((member, idx) => (
+            <motion.article
               key={member.id}
-              className="group relative rounded-3xl border border-black/[0.08] bg-white/95 backdrop-blur-xl px-6 pt-20 pb-7 text-center shadow-[0_22px_55px_-24px_rgba(13,15,20,0.16)] hover:border-[#E11D35]/40 hover:shadow-[0_26px_65px_-22px_rgba(225,29,53,0.18)] transition-all duration-300 flex flex-col justify-start"
+              initial={{ opacity: 0, y: 36 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.65, delay: idx * 0.1, ease: EASE_EDITORIAL }}
+              whileHover={{ y: -6 }}
+              className="group relative rounded-3xl border border-black/[0.08] bg-white/95 backdrop-blur-xl px-6 pt-20 pb-7 text-center shadow-[0_22px_55px_-24px_rgba(13,15,20,0.16)] hover:border-[#E11D35]/40 hover:shadow-[0_28px_65px_-22px_rgba(225,29,53,0.2)] transition-colors duration-300 flex flex-col justify-start"
             >
               {/* Floating Circular Portrait Pulled Above Top Border */}
-              <div className="absolute -top-[64px] left-1/2 -translate-x-1/2 w-[128px] h-[128px]">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85, y: 14 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 260,
+                  damping: 22,
+                  delay: 0.1 + idx * 0.1,
+                }}
+                className="absolute -top-[64px] left-1/2 -translate-x-1/2 w-[128px] h-[128px]"
+              >
                 {/* Slowly Rotating Dashed Crimson Halo */}
                 <span
                   aria-hidden="true"
@@ -139,15 +173,15 @@ export function FoundersSection() {
                       src={member.image}
                       alt={`${member.name}, ${member.role} at The Promos`}
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover object-top"
+                      className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-105"
                     />
                   </div>
                 ) : (
-                  <div className="relative w-full h-full rounded-full border-4 border-white bg-gradient-to-b from-[#FFF2F4] to-[#FCECEF] shadow-[0_14px_30px_-8px_rgba(13,15,20,0.18)] flex items-center justify-center font-display text-[30px] font-extrabold tracking-tight text-[#E11D35]">
+                  <div className="relative w-full h-full rounded-full border-4 border-white bg-gradient-to-b from-[#FFF2F4] to-[#FCECEF] shadow-[0_14px_30px_-8px_rgba(13,15,20,0.18)] flex items-center justify-center font-display text-[30px] font-extrabold tracking-tight text-[#E11D35] transition-transform duration-300 group-hover:scale-105">
                     {member.initials}
                   </div>
                 )}
-              </div>
+              </motion.div>
 
               {/* Role Pill Badge */}
               <div className="flex flex-wrap items-center justify-center gap-2">
@@ -173,7 +207,7 @@ export function FoundersSection() {
                   {member.detailBio}
                 </p>
               )}
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>
