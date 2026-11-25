@@ -1,17 +1,19 @@
-import { ExternalLink, Play, X } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { Pause, Play, Volume2, VolumeX } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { REELS, type ReelItem } from '../data/content';
-import { EASE_EDITORIAL, Reveal } from './MotionPrimitives';
+import { Reveal } from './MotionPrimitives';
 
 interface ReelsSectionProps {
-  onOpenInquiry: (defaultPackage?: string) => void;
+  onOpenInquiry?: (defaultPackage?: string) => void;
 }
 
-export function ReelsSection({ onOpenInquiry }: ReelsSectionProps) {
+export function ReelsSection(_props: ReelsSectionProps) {
   const [reels, setReels] = useState<ReelItem[]>(REELS);
-  const [selectedReel, setSelectedReel] = useState<ReelItem | null>(null);
+  const [playingKey, setPlayingKey] = useState<string | null>(null);
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     // GitHub Pages is static; retain the existing local reel data there.
@@ -21,7 +23,12 @@ export function ReelsSection({ onOpenInquiry }: ReelsSectionProps) {
       .then((res) => (res.ok ? res.json() : null))
       .then((data: { reels?: ReelItem[] } | null) => {
         if (active && Array.isArray(data?.reels) && data.reels.length > 0) {
-          setReels(data.reels);
+          setReels(
+            data.reels.map((item) => ({
+              ...item,
+              thumbnail: `${import.meta.env.BASE_URL}assets/reels/${item.shortcode}.jpg`,
+            }))
+          );
         }
       })
       .catch(() => {
@@ -32,9 +39,42 @@ export function ReelsSection({ onOpenInquiry }: ReelsSectionProps) {
     };
   }, []);
 
+  // Ensure the active inline video starts playing immediately with sound on click
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!playingKey || !vid) return;
+    setProgress(0);
+    vid.currentTime = 0;
+    vid.muted = isMuted;
+    const playPromise = vid.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {
+        // Fallback to muted playback if browser autoplay policy blocks unmuted play
+        vid.muted = true;
+        setIsMuted(true);
+        void vid.play();
+      });
+    }
+  }, [playingKey]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
+
   // Duplicate list once for seamless continuous marquee loop
   const trackItems = [...reels, ...reels];
-  const shouldPause = hoveredKey !== null || selectedReel !== null;
+  const shouldPause = hoveredKey !== null || playingKey !== null;
+
+  const handleTogglePlay = (cardKey: string) => {
+    if (playingKey === cardKey) {
+      setPlayingKey(null);
+      setProgress(0);
+    } else {
+      setPlayingKey(cardKey);
+    }
+  };
 
   return (
     <section
@@ -60,7 +100,7 @@ export function ReelsSection({ onOpenInquiry }: ReelsSectionProps) {
         </Reveal>
       </div>
 
-      {/* Continuous Seamless Auto-Scrolling Carousel (pauses cleanly when hovering any reel card) */}
+      {/* Continuous Seamless Auto-Scrolling Carousel (pauses cleanly when hovering or playing any reel) */}
       <Reveal delay={0.08} y={20} className="relative w-full">
         {/* Soft horizontal edge fades */}
         <div
@@ -81,154 +121,127 @@ export function ReelsSection({ onOpenInquiry }: ReelsSectionProps) {
           {trackItems.map((reel, index) => {
             const cardKey = `${reel.id}-${index}`;
             const isHovered = hoveredKey === cardKey;
+            const isPlaying = playingKey === cardKey;
+            const videoSrc = `${import.meta.env.BASE_URL}assets/reels/${reel.shortcode}.mp4`;
+
             return (
-              <button
+              <div
                 key={cardKey}
-                type="button"
-                onClick={() => setSelectedReel(reel)}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleTogglePlay(cardKey)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleTogglePlay(cardKey);
+                  }
+                }}
                 onMouseEnter={() => setHoveredKey(cardKey)}
                 onMouseLeave={() => setHoveredKey(null)}
                 onFocus={() => setHoveredKey(cardKey)}
                 onBlur={() => setHoveredKey(null)}
-                aria-label={`Play ${reel.title} (${reel.metricBadge})`}
-                className={`group/card relative flex-none w-[246px] sm:w-[272px] aspect-[9/16] rounded-[24px] overflow-hidden bg-[#14171F] text-left ring-1 ring-black/10 shadow-[0_18px_42px_-20px_rgba(13,15,20,0.42)] cursor-pointer transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#E11D35] ${
-                  isHovered
-                    ? '-translate-y-2.5 scale-[1.015] shadow-[0_28px_58px_-18px_rgba(225,29,53,0.36)] ring-[#E11D35]/45'
-                    : ''
+                aria-label={
+                  isPlaying
+                    ? `Pause ${reel.title}`
+                    : `Play ${reel.title} (${reel.metricBadge})`
+                }
+                className={`group/card relative flex-none w-[246px] sm:w-[272px] aspect-[9/16] rounded-[24px] overflow-hidden bg-[#0D0F14] text-left ring-1 ring-black/10 shadow-[0_18px_42px_-20px_rgba(13,15,20,0.42)] cursor-pointer transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#E11D35] ${
+                  isPlaying
+                    ? '-translate-y-2.5 scale-[1.03] shadow-[0_30px_64px_-16px_rgba(225,29,53,0.42)] ring-2 ring-[#E11D35]/70 z-20'
+                    : isHovered
+                      ? '-translate-y-2.5 scale-[1.015] shadow-[0_28px_58px_-18px_rgba(225,29,53,0.36)] ring-[#E11D35]/45'
+                      : ''
                 }`}
               >
-                <img
-                  src={reel.thumbnail}
-                  alt={reel.title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover object-center group-hover/card:scale-[1.05] transition-transform duration-500 ease-out"
-                />
+                {isPlaying ? (
+                  <video
+                    ref={videoRef}
+                    src={videoSrc}
+                    poster={reel.thumbnail}
+                    playsInline
+                    loop
+                    muted={isMuted}
+                    onTimeUpdate={(e) => {
+                      const el = e.currentTarget;
+                      if (el.duration > 0) {
+                        setProgress((el.currentTime / el.duration) * 100);
+                      }
+                    }}
+                    className="w-full h-full object-cover object-center bg-[#0D0F14]"
+                  />
+                ) : (
+                  <img
+                    src={reel.thumbnail}
+                    alt={reel.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover object-center group-hover/card:scale-[1.05] transition-transform duration-500 ease-out"
+                  />
+                )}
 
-                {/* Subtle cinema bottom vignette */}
+                {/* Subtle bottom vignette (fades gently when video is playing) */}
                 <div
                   aria-hidden="true"
-                  className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/30 to-transparent"
+                  className={`pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/30 to-transparent transition-opacity duration-300 ${
+                    isPlaying ? 'opacity-60' : 'opacity-100'
+                  }`}
                 />
 
                 {/* Views Badge Top-Right */}
-                <span className="absolute top-3.5 right-3.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#A3152A] text-[12px] font-bold shadow-[0_6px_18px_rgba(0,0,0,0.2)] tabular-nums">
+                <span className="pointer-events-none absolute top-3.5 right-3.5 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#A3152A] text-[12px] font-bold shadow-[0_6px_18px_rgba(0,0,0,0.2)] tabular-nums">
                   {reel.metricBadge}
                 </span>
 
-                {/* Sculpted Play Button Bottom-Left */}
-                <span className="absolute bottom-4 left-4 w-11 h-11 rounded-full bg-black/50 backdrop-blur-md border border-white/80 flex items-center justify-center text-white group-hover/card:bg-[#E11D35] group-hover/card:border-[#E11D35] group-hover/card:scale-110 transition-all duration-200">
-                  <Play className="w-4 h-4 fill-white ml-0.5" />
+                {/* Mute / Unmute Control Top-Left (only while playing) */}
+                {isPlaying && (
+                  <button
+                    type="button"
+                    aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsMuted((prev) => !prev);
+                    }}
+                    className="absolute top-3.5 left-3.5 w-8 h-8 rounded-full bg-black/55 hover:bg-black/75 backdrop-blur-md border border-white/25 flex items-center justify-center text-white transition-colors cursor-pointer"
+                  >
+                    {isMuted ? (
+                      <VolumeX className="w-3.5 h-3.5" />
+                    ) : (
+                      <Volume2 className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                )}
+
+                {/* Sculpted Play / Pause Control Bottom-Left */}
+                <span
+                  className={`absolute bottom-4 left-4 w-11 h-11 rounded-full backdrop-blur-md border flex items-center justify-center text-white transition-all duration-200 ${
+                    isPlaying
+                      ? 'bg-[#E11D35]/90 border-[#E11D35] opacity-90 group-hover/card:opacity-100'
+                      : 'bg-black/50 border-white/80 group-hover/card:bg-[#E11D35] group-hover/card:border-[#E11D35] group-hover/card:scale-110'
+                  }`}
+                >
+                  {isPlaying ? (
+                    <Pause className="w-4 h-4 fill-white" />
+                  ) : (
+                    <Play className="w-4 h-4 fill-white ml-0.5" />
+                  )}
                 </span>
-              </button>
+
+                {/* Sleek Crimson Playback Progress Bar along bottom edge while playing */}
+                {isPlaying && (
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-1 bg-white/20"
+                  >
+                    <div
+                      style={{ width: `${progress}%` }}
+                      className="h-full bg-gradient-to-r from-[#E11D35] to-[#FF6B4A] transition-[width] duration-150 linear"
+                    />
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
       </Reveal>
-
-      {/* Interactive Instagram Reel Player Modal with Smooth Spring AnimatePresence */}
-      <AnimatePresence>
-        {selectedReel && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.22 }}
-            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="reel-modal-title"
-            onClick={() => setSelectedReel(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 14 }}
-              transition={{ duration: 0.32, ease: EASE_EDITORIAL }}
-              className="bg-[#FCFBF9] rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-12 max-h-[92vh]"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Left: Official Instagram Reel Embed */}
-              <div className="md:col-span-6 bg-[#0D0F14] flex items-center justify-center min-h-[420px] md:min-h-[540px]">
-                <iframe
-                  src={`https://www.instagram.com/p/${selectedReel.shortcode}/embed/`}
-                  title={selectedReel.title}
-                  className="w-full h-[460px] md:h-[560px] border-0 bg-white"
-                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
-
-              {/* Right: Reel Metrics & CTA */}
-              <div className="md:col-span-6 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto">
-                <div>
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="text-xs font-semibold text-[#A3152A]">
-                      {selectedReel.creatorHandle} · {selectedReel.niche}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedReel(null)}
-                      aria-label="Close reel modal"
-                      className="w-8 h-8 rounded-full hover:bg-black/5 flex items-center justify-center text-[#555B66] cursor-pointer shrink-0"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  <h3
-                    id="reel-modal-title"
-                    className="mt-2 font-display text-xl font-extrabold text-[#0D0F14] leading-snug"
-                  >
-                    {selectedReel.title}
-                  </h3>
-
-                  <div className="mt-5 grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl bg-white border border-[#0D0F14]/[0.08] p-4">
-                      <p className="text-xs text-[#666D7A]">Views</p>
-                      <p className="mt-1 font-editorial italic text-xl font-semibold text-[#C4162C] tabular-nums">
-                        {selectedReel.metricBadge}
-                      </p>
-                    </div>
-                    <div className="rounded-2xl bg-white border border-[#0D0F14]/[0.08] p-4">
-                      <p className="text-xs text-[#666D7A]">Engagement</p>
-                      <p className="mt-1 font-display text-sm font-bold text-[#0D0F14] tabular-nums">
-                        {selectedReel.likesLabel} · {selectedReel.commentsLabel}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-5">
-                    <a
-                      href={selectedReel.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-[#E11D35] hover:text-[#B81429] transition-colors"
-                    >
-                      Open directly on Instagram
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-
-                <div className="mt-6 pt-5 border-t border-black/[0.07]">
-                  <motion.button
-                    type="button"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setSelectedReel(null);
-                      onOpenInquiry('Complete Momentum');
-                    }}
-                    className="btn-sheen w-full py-3.5 px-5 rounded-full bg-[#E11D35] hover:bg-[#C4162C] text-white text-sm font-semibold transition-colors cursor-pointer"
-                  >
-                    Build Reels Like This
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }
