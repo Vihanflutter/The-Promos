@@ -12,6 +12,8 @@ export function ReelsSection({ onOpenInquiry }: ReelsSectionProps) {
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 
   useEffect(() => {
+    // GitHub Pages is static; retain the existing local reel data there.
+    if (import.meta.env.PROD && window.location.hostname.endsWith('.github.io')) return;
     let active = true;
     fetch('/api/reels')
       .then((res) => (res.ok ? res.json() : null))
